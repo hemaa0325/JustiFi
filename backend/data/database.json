@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "$2a$10$kKMcZGVe7K4ijzYUxXkrx.w9vZmUIMHeMx1SAfLKPcVykwUCij0tW",
+      "full_name": "Test User",
+      "phone": "",
+      "address": "",
+      "occupation": "",
+      "role": "user",
+      "created_at": "2025-11-06T18:10:54.755Z"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "password": "$2a$10$4I.NbJFkscSsQeMSmxvSpe3wps2zx5.cq8IB.q.deKdIevwMuhkLm",
+      "full_name": "admin",
+      "phone": "",
+      "address": "",
+      "occupation": "",
+      "role": "admin",
+      "created_at": "2025-11-06T18:15:37.259Z"
+    }
+  ],
+  "documents": [],
+  "assessments": [],
+  "disbursements": []
+}

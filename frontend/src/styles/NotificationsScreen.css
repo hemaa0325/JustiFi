@@ -1,0 +1,271 @@
+.notifications-screen {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.dark-mode .notifications-screen {
+  background-color: #1a1a1a;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+body.dark-mode .header {
+  background-color: #2d2d2d;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #0056b3;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+body.dark-mode .back-button {
+  color: #4d94ff;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+  flex-grow: 1;
+  text-align: center;
+  padding-right: 2.5rem; /* Space for back button */
+}
+
+body.dark-mode .header h1 {
+  color: #e0e0e0;
+}
+
+.mark-all-button {
+  background: none;
+  border: none;
+  color: #0056b3;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+body.dark-mode .mark-all-button {
+  color: #4d94ff;
+}
+
+.notifications-list {
+  width: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+body.dark-mode .notifications-list {
+  background-color: #2d2d2d;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.notification-item {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+body.dark-mode .notification-item {
+  border-bottom: 1px solid #444;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.unread {
+  background-color: #e7f1ff;
+}
+
+body.dark-mode .notification-item.unread {
+  background-color: #2d4a6d;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+body.dark-mode .notification-item:hover {
+  background-color: #3d3d3d;
+}
+
+.notification-content h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+body.dark-mode .notification-content h3 {
+  color: #e0e0e0;
+}
+
+.notification-content p {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+body.dark-mode .notification-content p {
+  color: #aaa;
+}
+
+.notification-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.time {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+body.dark-mode .time {
+  color: #888;
+}
+
+.unread-badge {
+  background-color: #0056b3;
+  color: white;
+  border-radius: 12px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+body.dark-mode .unread-badge {
+  background-color: #4d94ff;
+}
+
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+}
+
+.empty-state p {
+  color: #666;
+  margin: 0;
+}
+
+body.dark-mode .empty-state p {
+  color: #aaa;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .notifications-screen {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .notifications-list {
+    max-width: 100%;
+  }
+  
+  .notification-item {
+    padding: 1.2rem;
+  }
+  
+  .notification-content h3 {
+    font-size: 1rem;
+  }
+  
+  .notification-content p {
+    font-size: 0.85rem;
+  }
+  
+  .time {
+    font-size: 0.75rem;
+  }
+  
+  .unread-badge {
+    padding: 0.1rem 0.4rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .notifications-screen {
+    padding: 0.5rem;
+  }
+  
+  .header {
+    margin-bottom: 1rem;
+  }
+  
+  .back-button {
+    padding: 0.3rem;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+  
+  .header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .mark-all-button {
+    padding: 0.3rem;
+    font-size: 0.9rem;
+  }
+  
+  .notification-item {
+    padding: 1rem;
+  }
+  
+  .notification-content h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .notification-content p {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .notification-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  
+  .time {
+    font-size: 0.7rem;
+  }
+  
+  .unread-badge {
+    padding: 0.1rem 0.3rem;
+    font-size: 0.6rem;
+  }
+  
+  .empty-state {
+    padding: 2rem;
+  }
+}

@@ -1,0 +1,501 @@
+.result-screen {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+body.dark-mode .result-screen {
+  background-color: #0f172a;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  border: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+body.dark-mode .header {
+  background-color: #1e293b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #334155;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #2563eb;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+body.dark-mode .back-button {
+  color: #93c5fd;
+}
+
+.back-button:hover {
+  background-color: #dbeafe;
+}
+
+body.dark-mode .back-button:hover {
+  background-color: #1e3a8a;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1e293b;
+  flex-grow: 1;
+  text-align: center;
+  padding-right: 2.5rem; /* Space for back button */
+  font-weight: 700;
+}
+
+body.dark-mode .header h1 {
+  color: #f1f5f9;
+}
+
+.score-card {
+  width: 100%;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  text-align: center;
+  border: 1px solid #bae6fd;
+}
+
+body.dark-mode .score-card {
+  background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #0284c7;
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.score-header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+body.dark-mode .score-header h2 {
+  color: #f1f5f9;
+}
+
+.decision-badge {
+  padding: 0.625rem 1.25rem;
+  border-radius: 2rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.score-display {
+  margin-bottom: 1.25rem;
+}
+
+.score {
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: #2563eb;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .score {
+  color: #93c5fd;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.score-max {
+  font-size: 1.75rem;
+  color: #64748b;
+  vertical-align: super;
+}
+
+body.dark-mode .score-max {
+  color: #94a3b8;
+}
+
+.score-message {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin: 0 0 1.25rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+body.dark-mode .score-message {
+  color: #e2e8f0;
+}
+
+.reasons-section {
+  width: 100%;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+body.dark-mode .reasons-section {
+  background-color: #1e293b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #334155;
+}
+
+.reasons-section h3 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+body.dark-mode .reasons-section h3 {
+  color: #f1f5f9;
+}
+
+.reasons-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reason-item {
+  padding: 0.875rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+body.dark-mode .reason-item {
+  border-bottom: 1px solid #334155;
+  color: #cbd5e1;
+}
+
+.reason-item:last-child {
+  border-bottom: none;
+}
+
+.loan-offer {
+  width: 100%;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-radius: 1rem;
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  border: 1px solid #bbf7d0;
+}
+
+body.dark-mode .loan-offer {
+  background: linear-gradient(135deg, #052e16 0%, #064e3b 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #047857;
+}
+
+.loan-offer h3 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+body.dark-mode .loan-offer h3 {
+  color: #f1f5f9;
+}
+
+.loan-amount {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #10b981;
+  margin: 1.25rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .loan-amount {
+  color: #6ee7b7;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loan-details {
+  color: #64748b;
+  margin: 0 0 1.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+body.dark-mode .loan-details {
+  color: #94a3b8;
+}
+
+.success-message {
+  color: #10b981;
+  font-weight: 600;
+  margin: 1.25rem 0;
+  font-size: 1.125rem;
+}
+
+body.dark-mode .success-message {
+  color: #6ee7b7;
+}
+
+.error-message {
+  color: #ef4444;
+  font-weight: 600;
+  margin: 1.25rem 0;
+  font-size: 1.125rem;
+}
+
+body.dark-mode .error-message {
+  color: #fecaca;
+}
+
+.success-details {
+  background-color: #f0fdf4;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  margin: 1.25rem 0;
+  text-align: left;
+  border: 1px solid #bbf7d0;
+}
+
+body.dark-mode .success-details {
+  background-color: #064e3b;
+  border: 1px solid #047857;
+}
+
+.success-details p {
+  margin: 0.625rem 0;
+  color: #1e293b;
+  font-size: 1rem;
+}
+
+body.dark-mode .success-details p {
+  color: #d1fae5;
+}
+
+.disburse-button {
+  width: 100%;
+  padding: 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+}
+
+body.dark-mode .disburse-button {
+  background: linear-gradient(135deg, #059669 0%, #0f766e 100%);
+  box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3);
+}
+
+.disburse-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+}
+
+body.dark-mode .disburse-button:hover {
+  box-shadow: 0 6px 12px rgba(5, 150, 105, 0.4);
+}
+
+.disburse-button:active {
+  transform: translateY(0);
+}
+
+.actions {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 1.125rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2563eb;
+  background-color: transparent;
+  border: 1px solid #2563eb;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+body.dark-mode .secondary-button {
+  color: #93c5fd;
+  border-color: #93c5fd;
+}
+
+.secondary-button:hover {
+  background-color: #dbeafe;
+}
+
+body.dark-mode .secondary-button:hover {
+  background-color: #1e3a8a;
+}
+
+.privacy-footer {
+  text-align: center;
+  width: 100%;
+}
+
+.privacy-footer p {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+body.dark-mode .privacy-footer p {
+  color: #94a3b8;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .result-screen {
+    padding: 1.25rem;
+  }
+  
+  .header h1 {
+    font-size: 1.375rem;
+  }
+  
+  .score-card,
+  .reasons-section,
+  .loan-offer {
+    padding: 1.75rem;
+  }
+  
+  .score {
+    font-size: 4rem;
+  }
+  
+  .score-max {
+    font-size: 1.5rem;
+  }
+  
+  .score-message {
+    font-size: 1.125rem;
+  }
+  
+  .loan-amount {
+    font-size: 2.25rem;
+  }
+  
+  .secondary-button {
+    padding: 1rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-screen {
+    padding: 1rem;
+  }
+  
+  .header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .back-button {
+    padding: 0.375rem;
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+  }
+  
+  .header h1 {
+    font-size: 1.25rem;
+  }
+  
+  .score-card,
+  .reasons-section,
+  .loan-offer {
+    padding: 1.25rem;
+  }
+  
+  .score-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .score {
+    font-size: 3.5rem;
+  }
+  
+  .score-max {
+    font-size: 1.25rem;
+  }
+  
+  .score-message {
+    font-size: 1rem;
+  }
+  
+  .reasons-section h3,
+  .loan-offer h3 {
+    font-size: 1.125rem;
+  }
+  
+  .reason-item {
+    padding: 0.625rem 0;
+    font-size: 0.875rem;
+  }
+  
+  .loan-amount {
+    font-size: 2rem;
+    margin: 1rem 0;
+  }
+  
+  .loan-details {
+    font-size: 0.875rem;
+    margin: 0 0 1.25rem;
+  }
+  
+  .disburse-button,
+  .secondary-button {
+    padding: 0.875rem;
+    font-size: 0.875rem;
+  }
+  
+  .actions {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .privacy-footer p {
+    font-size: 0.8125rem;
+  }
+}

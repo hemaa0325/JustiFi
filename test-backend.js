@@ -3,12 +3,12 @@ const fetch = require('node-fetch');
 async function testBackend() {
   try {
     // Test health endpoint
-    const healthResponse = await fetch('http://localhost:55234/api/health');
+    const healthResponse = await fetch('http://localhost:52093/api/health');
     const healthData = await healthResponse.json();
     console.log('Health check:', healthData);
 
     // Test signup
-    const signupResponse = await fetch('http://localhost:55234/api/auth/signup', {
+    const signupResponse = await fetch('http://localhost:52093/api/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
