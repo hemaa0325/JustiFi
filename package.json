@@ -1,0 +1,21 @@
+{
+  "name": "trusttap",
+  "version": "1.0.0",
+  "description": "Instant Micro-Loans for the Underserved Using Receipts and Behavior",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}
