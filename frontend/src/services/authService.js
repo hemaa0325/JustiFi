@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:52093/api';
+const API_BASE_URL = '/api'; // Use relative path since frontend is served from backend
 
 // Function to signup a new user
 export const signup = async (userData) => {

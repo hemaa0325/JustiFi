@@ -54,7 +54,7 @@ export const getUserDetails = async (userId) => {
 // Perform advanced credit assessment
 export const performAssessment = async (userId) => {
   try {
-    const data = await apiCall(`/user/${userId}/assess`, {
+    const data = await apiCall(`/user/${userId}`, {
       method: 'POST'
     });
     return data;
@@ -91,7 +91,7 @@ export const downloadDocument = async (docId) => {
       throw new Error('No authentication token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/documents/download/${docId}`, {
+    const response = await fetch(`/api/banker/documents/download/${docId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

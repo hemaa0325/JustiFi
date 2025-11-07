@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:52093/api'; // Updated to match backend port
+const API_BASE_URL = '/api/admin'; // Use relative path since frontend is served from backend
 
 // Function to get all users (for admin dashboard)
 export const getAllUsersForAdmin = async () => {
@@ -8,7 +8,7 @@ export const getAllUsersForAdmin = async () => {
       throw new Error('No authentication token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/admin/users`, {
+    const response = await fetch(`${API_BASE_URL}/users`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -36,7 +36,7 @@ export const getUserDetailsForAdmin = async (userId) => {
       throw new Error('No authentication token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -64,7 +64,7 @@ export const updateUserForAdmin = async (userId, userData) => {
       throw new Error('No authentication token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -93,7 +93,7 @@ export const deleteUserForAdmin = async (userId) => {
       throw new Error('No authentication token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
