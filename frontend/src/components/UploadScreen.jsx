@@ -4,7 +4,7 @@ import CreditScoreAnalysis from './CreditScoreAnalysis';
 import { t } from '../utils/localization';
 import { getCurrentUser } from '../services/authService';
 
-const API_BASE_URL = 'http://localhost:52092/api';
+const API_BASE_URL = '/api'; // Use relative path to match backend
 
 const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
   const [salaryReceipt, setSalaryReceipt] = useState(null);
@@ -48,28 +48,86 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     setCreditScoreResult(null); // Reset analysis when new file is selected
   };
 
-  const handleSalaryReceiptUpload = () => {
+  const handleSalaryReceiptUpload = async () => {
     if (!salaryReceipt) {
       setUploadStatus(t('please_select_file', language));
       return;
     }
 
-    // In a real implementation, you would upload the file here
-    // For now, we'll just show a confirmation message
-    setUploadedFiles(prev => ({ ...prev, salaryReceipt: true }));
-    setUploadStatus(t('salary_receipt_uploaded_successfully', language));
+    setIsUploading(true);
+    setUploadStatus('');
+
+    try {
+      const formData = new FormData();
+      formData.append('document', salaryReceipt);
+      formData.append('type', 'salary_receipt');
+      
+      // Get current user ID to associate with the document
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+        formData.append('userId', currentUser.id);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/assess/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || t('error_processing_request', language));
+      }
+
+      setUploadedFiles(prev => ({ ...prev, salaryReceipt: true }));
+      setUploadStatus(t('salary_receipt_uploaded_successfully', language));
+    } catch (error) {
+      console.error('Error uploading salary receipt:', error);
+      setUploadStatus(error.message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const handleBankStatementUpload = () => {
+  const handleBankStatementUpload = async () => {
     if (!bankStatement) {
       setUploadStatus(t('please_select_file', language));
       return;
     }
 
-    // In a real implementation, you would upload the file here
-    // For now, we'll just show a confirmation message
-    setUploadedFiles(prev => ({ ...prev, bankStatement: true }));
-    setUploadStatus(t('bank_statement_uploaded_successfully', language));
+    setIsUploading(true);
+    setUploadStatus('');
+
+    try {
+      const formData = new FormData();
+      formData.append('document', bankStatement);
+      formData.append('type', 'bank_statement');
+      
+      // Get current user ID to associate with the document
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+        formData.append('userId', currentUser.id);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/assess/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || t('error_processing_request', language));
+      }
+
+      setUploadedFiles(prev => ({ ...prev, bankStatement: true }));
+      setUploadStatus(t('bank_statement_uploaded_successfully', language));
+    } catch (error) {
+      console.error('Error uploading bank statement:', error);
+      setUploadStatus(error.message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleAssessment = async () => {
@@ -83,25 +141,20 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     setUploadStatus('');
 
     try {
-      const formData = new FormData();
-      
-      // Append files if they exist
-      if (salaryReceipt) {
-        formData.append('receipts', salaryReceipt);
-      }
-      if (bankStatement) {
-        formData.append('receipts', bankStatement);
-      }
-
       // Get current user ID to associate with the assessment
       const currentUser = getCurrentUser();
-      if (currentUser) {
-        formData.append('authUserId', currentUser.id);
+      if (!currentUser) {
+        throw new Error(t('user_not_authenticated', language));
       }
 
-      const response = await fetch(`${API_BASE_URL}/assess`, {
+      const response = await fetch(`${API_BASE_URL}/assess/user/${currentUser.id}`, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: currentUser.id
+        }),
       });
 
       const result = await response.json();
@@ -157,7 +210,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
                 onClick={handleSalaryReceiptUpload}
                 disabled={isUploading || !salaryReceipt}
               >
-                {t('upload_salary_receipt_button', language)}
+                {isUploading ? t('uploading', language) : t('upload_salary_receipt_button', language)}
               </button>
               
               {uploadedFiles.salaryReceipt && (
@@ -186,7 +239,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
                 onClick={handleBankStatementUpload}
                 disabled={isUploading || !bankStatement}
               >
-                {t('upload_bank_statement_button', language)}
+                {isUploading ? t('uploading', language) : t('upload_bank_statement_button', language)}
               </button>
               
               {uploadedFiles.bankStatement && (

@@ -1,7 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers, getUserById, getDocumentsByUserId, getTransactionsByUserId } = require('../db/fileDatabase');
+const { getAllUsers, getUserById, getDocumentsByUserId, getTransactionsByUserId, createDocument } = require('../db/fileDatabase');
 const { calculateAdvancedScore, calculateScoreWithExternalData } = require('../utils/scoringEngine');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '..', 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Get all users for banker to assess
 router.get('/users', async (req, res) => {
@@ -62,8 +82,40 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
-// Perform advanced credit assessment
-router.post('/user/:userId/assess', async (req, res) => {
+// Handle document upload
+router.post('/upload', upload.single('document'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const { userId, type } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    // Create document record in database
+    const document = await createDocument({
+      userId,
+      name: req.file.originalname,
+      type: type || 'unknown',
+      path: req.file.path,
+      size: req.file.size
+    });
+
+    res.json({
+      message: 'Document uploaded successfully',
+      document
+    });
+  } catch (error) {
+    console.error('Error uploading document:', error);
+    res.status(500).json({ error: 'Error uploading document' });
+  }
+});
+
+// Perform advanced credit assessment for a specific user
+router.post('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await getUserById(userId);
@@ -120,6 +172,29 @@ router.get('/user/:userId/history', async (req, res) => {
     console.error('Error fetching assessment history:', error);
     res.status(500).json({ error: 'Error fetching assessment history' });
   }
+});
+
+// Get demo users
+router.get('/demo-users', (req, res) => {
+  const demoUsers = [
+    {
+      id: 'demo1',
+      name: 'Rajesh Kumar',
+      riskLevel: 'Low Risk'
+    },
+    {
+      id: 'demo2',
+      name: 'Priya Sharma',
+      riskLevel: 'Medium Risk'
+    },
+    {
+      id: 'demo3',
+      name: 'Amit Patel',
+      riskLevel: 'High Risk'
+    }
+  ];
+  
+  res.json(demoUsers);
 });
 
 module.exports = router;
