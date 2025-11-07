@@ -154,6 +154,11 @@ const createDocument = async (documentData) => {
     throw new Error('User not found');
   }
   
+  // Initialize documents array if it doesn't exist
+  if (!db.documents) {
+    db.documents = [];
+  }
+  
   // Create new document
   const newDocument = {
     id: generateId(),
@@ -173,6 +178,10 @@ const createDocument = async (documentData) => {
 
 const getDocumentsByUserId = (userId) => {
   const db = readDatabase();
+  // Handle case where documents array doesn't exist yet
+  if (!db.documents) {
+    db.documents = [];
+  }
   return db.documents.filter(document => document.userId === userId);
 };
 
@@ -185,6 +194,11 @@ const createAssessment = (assessmentData) => {
   const user = db.users.find(user => user.id === userId);
   if (!user) {
     throw new Error('User not found');
+  }
+  
+  // Initialize assessments array if it doesn't exist
+  if (!db.assessments) {
+    db.assessments = [];
   }
   
   // Create new assessment
@@ -214,6 +228,10 @@ const createAssessment = (assessmentData) => {
 
 const getAssessmentsByUserId = (userId) => {
   const db = readDatabase();
+  // Handle case where assessments array doesn't exist yet
+  if (!db.assessments) {
+    db.assessments = [];
+  }
   return db.assessments.filter(assessment => assessment.userId === userId);
 };
 
@@ -226,6 +244,11 @@ const createDisbursement = (disbursementData) => {
   const user = db.users.find(user => user.id === userId);
   if (!user) {
     throw new Error('User not found');
+  }
+  
+  // Initialize disbursements array if it doesn't exist
+  if (!db.disbursements) {
+    db.disbursements = [];
   }
   
   // Create new disbursement
@@ -245,6 +268,10 @@ const createDisbursement = (disbursementData) => {
 
 const getDisbursementsByUserId = (userId) => {
   const db = readDatabase();
+  // Handle case where disbursements array doesn't exist yet
+  if (!db.disbursements) {
+    db.disbursements = [];
+  }
   return db.disbursements.filter(disbursement => disbursement.userId === userId);
 };
 
@@ -257,6 +284,11 @@ const createTransaction = (transactionData) => {
   const user = db.users.find(user => user.id === userId);
   if (!user) {
     throw new Error('User not found');
+  }
+  
+  // Initialize transactions array if it doesn't exist
+  if (!db.transactions) {
+    db.transactions = [];
   }
   
   // Create new transaction
@@ -278,6 +310,10 @@ const createTransaction = (transactionData) => {
 
 const getTransactionsByUserId = (userId) => {
   const db = readDatabase();
+  // Handle case where transactions array doesn't exist yet
+  if (!db.transactions) {
+    db.transactions = [];
+  }
   return db.transactions.filter(transaction => transaction.userId === userId);
 };
 

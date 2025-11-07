@@ -32,10 +32,10 @@ router.get('/users', async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      fullName: user.fullName,
-      phone: user.phone,
-      address: user.address,
-      occupation: user.occupation,
+      fullName: user.fullName || user.full_name || '',
+      phone: user.phone || '',
+      address: user.address || '',
+      occupation: user.occupation || '',
       role: user.role,
       creditScore: user.creditScore || null,
       assessed: user.assessed || false
@@ -66,10 +66,10 @@ router.get('/user/:userId', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        fullName: user.fullName,
-        phone: user.phone,
-        address: user.address,
-        occupation: user.occupation,
+        fullName: user.fullName || user.full_name || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        occupation: user.occupation || '',
         role: user.role,
         creditScore: user.creditScore || null
       },
@@ -130,7 +130,10 @@ router.post('/user/:userId', async (req, res) => {
     
     // Prepare user data for scoring
     const userData = {
-      userProfile: user,
+      userProfile: {
+        ...user,
+        fullName: user.fullName || user.full_name || ''
+      },
       documents,
       transactions
     };
