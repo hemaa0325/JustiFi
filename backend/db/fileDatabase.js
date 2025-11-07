@@ -78,16 +78,28 @@ const createUser = async (userData) => {
   return userWithoutPassword;
 };
 
-const findUser = async (username, password) => {
+const findUser = async (identifier) => {
   const db = readDatabase();
-  const user = db.users.find(user => user.username === username || user.email === username);
+  const user = db.users.find(user => user.username === identifier || user.email === identifier);
   
-  if (user && await bcrypt.compare(password, user.password)) {
+  if (user) {
     const { password: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
   
   return null;
+};
+
+// Find user with password for authentication
+const findUserWithPassword = async (identifier) => {
+  const db = readDatabase();
+  const user = db.users.find(user => user.username === identifier || user.email === identifier);
+  return user || null;
+};
+
+// Verify password
+const verifyPassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
 };
 
 const getUserById = (userId) => {
@@ -275,6 +287,8 @@ initDatabase();
 module.exports = {
   createUser,
   findUser,
+  findUserWithPassword,
+  verifyPassword,
   getUserById,
   getAllUsers,
   updateUserProfile,

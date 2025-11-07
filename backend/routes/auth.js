@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { createUser, findUser, getUserById, getAllUsers, updateUserProfile, verifyPassword } = require('../db/fileDatabase');
+const { createUser, findUserWithPassword, verifyPassword, getUserById, getAllUsers, updateUserProfile } = require('../db/fileDatabase');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'trusttap_secret_key';
@@ -54,8 +54,8 @@ router.post('/login', async (req, res) => {
   }
   
   try {
-    // Find user by username or email
-    const user = findUser(identifier);
+    // Find user by username or email (with password)
+    const user = await findUserWithPassword(identifier);
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -69,17 +69,20 @@ router.post('/login', async (req, res) => {
     // Generate JWT token
     const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
     
+    // Return user data without password
+    const { password: _, ...userWithoutPassword } = user;
+    
     res.json({
       message: 'Login successful',
       user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        fullName: user.full_name,
-        phone: user.phone,
-        address: user.address,
-        occupation: user.occupation,
-        role: user.role
+        id: userWithoutPassword.id,
+        username: userWithoutPassword.username,
+        email: userWithoutPassword.email,
+        fullName: userWithoutPassword.fullName,
+        phone: userWithoutPassword.phone,
+        address: userWithoutPassword.address,
+        occupation: userWithoutPassword.occupation,
+        role: userWithoutPassword.role
       },
       token
     });
@@ -104,7 +107,7 @@ router.get('/profile/:userId', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        fullName: user.full_name,
+        fullName: user.fullName,
         phone: user.phone,
         address: user.address,
         occupation: user.occupation,
@@ -143,7 +146,7 @@ router.get('/users', (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        full_name: user.full_name,
+        fullName: user.fullName,
         phone: user.phone,
         address: user.address,
         occupation: user.occupation,
