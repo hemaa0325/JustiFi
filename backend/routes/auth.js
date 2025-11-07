@@ -182,6 +182,10 @@ router.put('/profile/:userId', (req, res) => {
     try {
       const updatedUser = updateUserProfile(userId, { fullName, email, phone, address, occupation });
       
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
       res.json({
         message: 'Profile updated successfully',
         user: {
