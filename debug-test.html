@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .step { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Debug Test for Document Upload and Scoring</h1>
+    
+    <div class="step">
+        <h3>Step 1: Login</h3>
+        <button onclick="loginUser()">Login as newuser</button>
+        <div id="loginResult"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Step 2: Upload Documents</h3>
+        <input type="file" id="salaryReceipt" accept=".pdf,.jpg,.jpeg,.png"><br><br>
+        <button onclick="uploadSalaryReceipt()">Upload Salary Receipt</button><br><br>
+        
+        <input type="file" id="bankStatement" accept=".pdf,.jpg,.jpeg,.png"><br><br>
+        <button onclick="uploadBankStatement()">Upload Bank Statement</button>
+        <div id="uploadResult"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Step 3: Calculate Score</h3>
+        <button onclick="calculateScore()">Calculate My Score</button>
+        <div id="scoreResult"></div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let salaryReceiptId = null;
+        let bankStatementId = null;
+        
+        async function loginUser() {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        identifier: 'newuser',
+                        password: 'newpass'
+                    }),
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    currentUser = result.user;
+                    document.getElementById('loginResult').innerHTML = 
+                        '<p class="success">✅ Logged in successfully as ' + currentUser.username + '</p>';
+                } else {
+                    document.getElementById('loginResult').innerHTML = 
+                        '<p class="error">❌ Login failed: ' + result.error + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('loginResult').innerHTML = 
+                    '<p class="error">❌ Login error: ' + error.message + '</p>';
+            }
+        }
+        
+        async function uploadSalaryReceipt() {
+            const fileInput = document.getElementById('salaryReceipt');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                document.getElementById('uploadResult').innerHTML = 
+                    '<p class="error">❌ Please select a salary receipt file first</p>';
+                return;
+            }
+            
+            if (!currentUser) {
+                document.getElementById('uploadResult').innerHTML = 
+                    '<p class="error">❌ Please login first</p>';
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('document', file);
+                formData.append('type', 'salary_receipt');
+                formData.append('userId', currentUser.id);
+                
+                const response = await fetch('/api/assess/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    salaryReceiptId = result.document.id;
+                    document.getElementById('uploadResult').innerHTML = 
+                        '<p class="success">✅ Salary receipt uploaded successfully</p>';
+                } else {
+                    document.getElementById('uploadResult').innerHTML = 
+                        '<p class="error">❌ Salary receipt upload failed: ' + result.error + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('uploadResult').innerHTML = 
+                    '<p class="error">❌ Salary receipt upload error: ' + error.message + '</p>';
+            }
+        }
+        
+        async function uploadBankStatement() {
+            const fileInput = document.getElementById('bankStatement');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                document.getElementById('uploadResult').innerHTML = 
+                    '<p class="error">❌ Please select a bank statement file first</p>';
+                return;
+            }
+            
+            if (!currentUser) {
+                document.getElementById('uploadResult').innerHTML = 
+                    '<p class="error">❌ Please login first</p>';
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('document', file);
+                formData.append('type', 'bank_statement');
+                formData.append('userId', currentUser.id);
+                
+                const response = await fetch('/api/assess/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    bankStatementId = result.document.id;
+                    document.getElementById('uploadResult').innerHTML += 
+                        '<p class="success">✅ Bank statement uploaded successfully</p>';
+                } else {
+                    document.getElementById('uploadResult').innerHTML += 
+                        '<p class="error">❌ Bank statement upload failed: ' + result.error + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('uploadResult').innerHTML += 
+                    '<p class="error">❌ Bank statement upload error: ' + error.message + '</p>';
+            }
+        }
+        
+        async function calculateScore() {
+            if (!currentUser) {
+                document.getElementById('scoreResult').innerHTML = 
+                    '<p class="error">❌ Please login first</p>';
+                return;
+            }
+            
+            if (!salaryReceiptId || !bankStatementId) {
+                document.getElementById('scoreResult').innerHTML = 
+                    '<p class="error">❌ Please upload both documents first</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/assess/user/' + currentUser.id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: currentUser.id
+                    }),
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('scoreResult').innerHTML = 
+                        '<p class="success">✅ Score calculated successfully!</p>' +
+                        '<p>Score: ' + result.score + '</p>' +
+                        '<p>Decision: ' + result.decision + '</p>' +
+                        '<p>Loan Amount: $' + result.loanAmount.toLocaleString() + '</p>';
+                } else {
+                    document.getElementById('scoreResult').innerHTML = 
+                        '<p class="error">❌ Score calculation failed: ' + result.error + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('scoreResult').innerHTML = 
+                    '<p class="error">❌ Score calculation error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

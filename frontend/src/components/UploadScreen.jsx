@@ -223,7 +223,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
                 disabled={isUploading || !salaryReceipt || uploadedFiles.salaryReceipt}
               >
                 {isUploading ? t('uploading', language) : 
-                 uploadedFiles.salaryReceipt ? t('uploaded', language) : 
+                 uploadedFiles.salaryReceipt ? t('salary_receipt_uploaded_successfully', language) : 
                  t('upload_salary_receipt_button', language)}
               </button>
               
@@ -254,7 +254,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
                 disabled={isUploading || !bankStatement || uploadedFiles.bankStatement}
               >
                 {isUploading ? t('uploading', language) : 
-                 uploadedFiles.bankStatement ? t('uploaded', language) : 
+                 uploadedFiles.bankStatement ? t('bank_statement_uploaded_successfully', language) : 
                  t('upload_bank_statement_button', language)}
               </button>
               
