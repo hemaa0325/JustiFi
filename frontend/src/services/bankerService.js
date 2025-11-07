@@ -1,56 +1,73 @@
-const API_BASE_URL = 'http://localhost:52093/api';
+const API_BASE_URL = '/api/banker';
 
-// Function to get all users (for banker dashboard)
-export const getAllUsers = async () => {
+// Helper function for API calls
+const apiCall = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+  
+  const url = `${API_BASE_URL}${endpoint}`;
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    ...options
+  };
+
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
-    const response = await fetch(`${API_BASE_URL}/banker/users`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    const data = await response.json();
+    const response = await fetch(url, config);
     
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch users');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
     }
     
-    return data.users;
+    return await response.json();
+  } catch (error) {
+    console.error(`API call failed for ${url}:`, error);
+    throw error;
+  }
+};
+
+// Get all users for assessment
+export const getAllUsers = async () => {
+  try {
+    const data = await apiCall('/users');
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-// Function to get user details with credit score
+// Get user details for assessment
 export const getUserDetails = async (userId) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
-    const response = await fetch(`${API_BASE_URL}/banker/users/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
+    const data = await apiCall(`/user/${userId}`);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Perform advanced credit assessment
+export const performAssessment = async (userId) => {
+  try {
+    const data = await apiCall(`/user/${userId}/assess`, {
+      method: 'POST'
     });
-    
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch user details');
-    }
-    
-    return data.user;
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Get assessment history
+export const getAssessmentHistory = async (userId) => {
+  try {
+    const data = await apiCall(`/user/${userId}/history`);
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -59,25 +76,7 @@ export const getUserDetails = async (userId) => {
 // Function to get user documents
 export const getUserDocuments = async (userId) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
-    const response = await fetch(`${API_BASE_URL}/banker/documents/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch user documents');
-    }
-    
+    const data = await apiCall(`/documents/${userId}`);
     return data.documents;
   } catch (error) {
     throw new Error(error.message);
@@ -92,7 +91,7 @@ export const downloadDocument = async (docId) => {
       throw new Error('No authentication token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/banker/documents/download/${docId}`, {
+    const response = await fetch(`${API_BASE_URL}/documents/download/${docId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

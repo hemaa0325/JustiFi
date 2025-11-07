@@ -23,6 +23,18 @@
       "occupation": "",
       "role": "admin",
       "created_at": "2025-11-06T18:15:37.259Z"
+    },
+    {
+      "id": 3,
+      "username": "tuna",
+      "email": "tuna@gmail.com",
+      "password": "$2a$10$Jbfg/0RSHYEN.F2AthL0FeKrEedIjRBTJ4v5heNyLIpyJ.P63hO8u",
+      "full_name": "tuna",
+      "phone": "",
+      "address": "",
+      "occupation": "",
+      "role": "user",
+      "created_at": "2025-11-07T14:32:16.133Z"
     }
   ],
   "documents": [],

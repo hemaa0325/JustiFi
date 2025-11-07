@@ -6,7 +6,7 @@ Millions of gig workers and small merchants in India lack access to formal credi
 
 ## Our Solution
 
-A mobile-first app that lets users upload receipts or connect mock transaction data. It calculates a credit score using simple rules, then gives an instant loan approval or rejection with a clear explanation — all while protecting user privacy.
+A mobile-first app that lets users upload receipts or connect mock transaction data. It calculates a credit score using advanced AI algorithms, then gives an instant loan approval or rejection with a clear explanation — all while protecting user privacy.
 
 ## What We'll Build (MVP Scope)
 
@@ -26,7 +26,8 @@ Simple UI with:
 
 - Accepts receipt data (JSON or image)
 - Extracts features (e.g., number of receipts, average amount)
-- Applies scoring rules
+- Applies advanced AI scoring algorithms
+- Integrates with external credit bureaus for comprehensive analysis
 - Returns: score, top reasons, decision, offer
 
 #### `/disburse` endpoint:
@@ -35,22 +36,33 @@ Simple UI with:
 - Adds a transaction to user history
 - Returns updated balance and repayment plan
 
-### Scoring Engine
+### Advanced AI Scoring Engine
 
-Rule-based logic (fast to build and explain):
+Enhanced machine learning-based logic with multiple data sources:
 
-- +10 points for steady income
-- +8 for 4+ receipts in 2 weeks
-- -15 for recent refunds
+#### Core Scoring Components:
+- **Income Stability Analysis**: Evaluates consistency and reliability of income sources
+- **Spending Pattern Recognition**: Identifies responsible spending behaviors
+- **Debt-to-Income Ratio**: Assesses financial obligations relative to income
+- **Credit History Integration**: Combines internal analysis with external bureau data
+- **Employment Verification**: Validates employment through document analysis
+- **Savings Behavior**: Evaluates financial responsibility through savings patterns
+- **Transaction Volume Analysis**: Measures account activity and engagement
+
+#### External Data Integration:
+- Real-time credit bureau data integration
+- Multi-bureau scoring aggregation
+- Dynamic risk assessment based on current market conditions
 
 Score range: 0–100
 
 Decision logic:
 
-- Score ≥ 80 → APPROVE full amount
-- 60–79 → APPROVE_WITH_CAP
-- 45–59 → REVIEW
-- <45 → REJECT
+- Score ≥ 80 → APPROVE full amount (up to $20,000)
+- 65–79 → APPROVE_WITH_CAP (up to $15,000)
+- 50–64 → APPROVE_WITH_CAP (up to $8,000)
+- 30–49 → REVIEW (manual assessment required)
+- <30 → REJECT
 
 ### Mock Data
 
@@ -77,7 +89,8 @@ Mock receipts: JSON files with date, amount, merchant
 
 ## What Makes Us Stand Out
 
-- Explainable score: "Why we approved you" in plain English
+- Explainable AI score: "Why we approved you" in plain English
 - Privacy-first: no PAN, no CIBIL, no full ID
 - Realistic demo: simulate full loan lifecycle
 - Social impact: helps real people, not just tech showcase
+- Advanced analytics: leverages cutting-edge AI for better decision making

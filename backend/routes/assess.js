@@ -1,222 +1,125 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
-const { saveDocument, saveAssessment } = require('../db/fileDatabase');
+const { getAllUsers, getUserById, getDocumentsByUserId, getTransactionsByUserId } = require('../db/fileDatabase');
+const { calculateAdvancedScore, calculateScoreWithExternalData } = require('../utils/scoringEngine');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'trusttap_secret_key';
-
-// Helper function to calculate credit score (simplified version)
-const calculateScore = (receipts) => {
-  // This is a simplified scoring algorithm for demonstration purposes
-  let score = 50; // Base score
-  let reasons = [];
-  
-  if (receipts && receipts.length > 0) {
-    // Number of receipts
-    if (receipts.length >= 10) {
-      score += 20;
-      reasons.push('+20 points for high transaction volume (10+ receipts)');
-    } else if (receipts.length >= 5) {
-      score += 10;
-      reasons.push('+10 points for moderate transaction volume (5-9 receipts)');
-    } else {
-      reasons.push('+0 points for low transaction volume (<5 receipts)');
-    }
-    
-    // Spending consistency
-    const spendingPattern = analyzeSpendingPattern(receipts);
-    if (spendingPattern === 'consistent') {
-      score += 15;
-      reasons.push('+15 points for consistent spending pattern');
-    } else if (spendingPattern === 'moderate') {
-      score += 5;
-      reasons.push('+5 points for moderate spending pattern');
-    } else {
-      reasons.push('+0 points for inconsistent spending pattern');
-    }
-    
-    // Refund percentage
-    const refundPercentage = calculateRefundPercentage(receipts);
-    if (refundPercentage < 15) {
-      score += 10;
-      reasons.push('+10 points for low refund percentage (<15%)');
-    } else if (refundPercentage < 30) {
-      reasons.push('+0 points for moderate refund percentage (15-30%)');
-    } else {
-      score -= 20;
-      reasons.push('-20 points for high refund percentage (>30%)');
-    }
+// Get all users for banker to assess
+router.get('/users', async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    // Filter out admins and only send necessary data
+    const filteredUsers = users.filter(user => user.role !== 'admin').map(user => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      fullName: user.fullName,
+      phone: user.phone,
+      address: user.address,
+      occupation: user.occupation,
+      role: user.role,
+      creditScore: user.creditScore || null,
+      assessed: user.assessed || false
+    }));
+    res.json(filteredUsers);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Error fetching users' });
   }
-  
-  // Decision based on score
-  let decision, loanAmount, message;
-  if (score >= 80) {
-    decision = 'APPROVE';
-    loanAmount = 15000;
-    message = 'Approved for the full loan amount based on your excellent financial history.';
-  } else if (score >= 60) {
-    decision = 'APPROVE_WITH_CAP';
-    loanAmount = 7500;
-    message = 'Approved with a capped amount based on your financial history.';
-  } else if (score >= 45) {
-    decision = 'REVIEW';
-    loanAmount = 2500;
-    message = 'Your application requires further review.';
-  } else {
-    decision = 'REJECT';
-    loanAmount = 0;
-    message = 'Your application has been rejected based on your financial history.';
-  }
-  
-  return {
-    score: Math.min(100, Math.max(0, score)),
-    decision,
-    loanAmount,
-    message,
-    reasons
-  };
-};
-
-// Helper function to analyze spending pattern
-const analyzeSpendingPattern = (receipts) => {
-  if (!receipts || receipts.length === 0) return 'inconsistent';
-  
-  // Group receipts by month
-  const monthlySpending = {};
-  receipts.forEach(receipt => {
-    const date = new Date(receipt.date);
-    const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
-    if (!monthlySpending[monthKey]) {
-      monthlySpending[monthKey] = 0;
-    }
-    monthlySpending[monthKey] += receipt.amount;
-  });
-  
-  // Calculate average and standard deviation
-  const monthlyAmounts = Object.values(monthlySpending);
-  const average = monthlyAmounts.reduce((sum, amount) => sum + amount, 0) / monthlyAmounts.length;
-  const variance = monthlyAmounts.reduce((sum, amount) => sum + Math.pow(amount - average, 2), 0) / monthlyAmounts.length;
-  const stdDev = Math.sqrt(variance);
-  
-  // Determine consistency based on coefficient of variation
-  const cv = (stdDev / average) * 100;
-  if (cv < 20) return 'consistent';
-  if (cv < 40) return 'moderate';
-  return 'inconsistent';
-};
-
-// Helper function to calculate refund percentage
-const calculateRefundPercentage = (receipts) => {
-  if (!receipts || receipts.length === 0) return 0;
-  
-  const refundReceipts = receipts.filter(receipt => receipt.type === 'refund');
-  return (refundReceipts.length / receipts.length) * 100;
-};
-
-// Mock receipts data
-const mockReceipts = [
-  { id: 1, userId: 1, date: '2023-01-15', amount: 85.50, merchant: 'Grocery Store', type: 'purchase' },
-  { id: 2, userId: 1, date: '2023-01-16', amount: 45.00, merchant: 'Gas Station', type: 'purchase' },
-  { id: 3, userId: 1, date: '2023-01-18', amount: 120.75, merchant: 'Restaurant', type: 'purchase' },
-  { id: 4, userId: 1, date: '2023-01-20', amount: 65.25, merchant: 'Pharmacy', type: 'purchase' },
-  { id: 5, userId: 1, date: '2023-01-22', amount: 30.00, merchant: 'Coffee Shop', type: 'purchase' }
-];
-
-// Assess endpoint
-router.post('/assess', (req, res) => {
-  // Verify JWT token
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token required' });
-  }
-  
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
-    }
-    
-    const { userId } = decoded;
-    const { receipts } = req.body;
-    
-    // Use mock receipts if none provided
-    const userReceipts = receipts && receipts.length > 0 ? receipts : mockReceipts.filter(r => r.userId == userId);
-    
-    // Calculate score
-    const scoreData = calculateScore(userReceipts);
-    
-    // Save assessment to database
-    try {
-      const assessment = saveAssessment({
-        userId,
-        creditScore: scoreData.score,
-        creditDecision: scoreData.decision,
-        loanAmount: scoreData.loanAmount,
-        message: scoreData.message,
-        reasons: scoreData.reasons
-      });
-      
-      res.json({
-        assessment: {
-          id: assessment.id,
-          creditScore: assessment.credit_score,
-          creditDecision: assessment.credit_decision,
-          loanAmount: assessment.loan_amount,
-          message: assessment.message,
-          reasons: assessment.reasons,
-          createdAt: assessment.created_at
-        }
-      });
-    } catch (error) {
-      console.error('Error saving assessment:', error);
-      res.status(500).json({ error: 'Error saving assessment' });
-    }
-  });
 });
 
-// Upload document endpoint
-router.post('/upload', (req, res) => {
-  // Verify JWT token
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token required' });
+// Get user details for assessment
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await getUserById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Get user's documents and transactions
+    const documents = await getDocumentsByUserId(userId);
+    const transactions = await getTransactionsByUserId(userId);
+    
+    res.json({
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        fullName: user.fullName,
+        phone: user.phone,
+        address: user.address,
+        occupation: user.occupation,
+        role: user.role,
+        creditScore: user.creditScore || null
+      },
+      documents,
+      transactions
+    });
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ error: 'Error fetching user details' });
   }
-  
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
+});
+
+// Perform advanced credit assessment
+router.post('/user/:userId/assess', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await getUserById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
     
-    const { userId } = decoded;
-    const { filename, originalName, fileSize, mimeType } = req.body;
+    // Get user's documents and transactions for analysis
+    const documents = await getDocumentsByUserId(userId);
+    const transactions = await getTransactionsByUserId(userId);
     
-    // Save document info to database
-    try {
-      const document = saveDocument({
-        userId,
-        filename: filename || `doc-${uuidv4()}`,
-        originalName: originalName || 'document.pdf',
-        filePath: `/uploads/${filename || `doc-${uuidv4()}`}`,
-        fileSize: fileSize || Math.floor(Math.random() * 1000000),
-        mimeType: mimeType || 'application/pdf'
-      });
-      
-      res.json({
-        document: {
-          id: document.id,
-          filename: document.filename,
-          originalName: document.original_name,
-          filePath: document.file_path,
-          fileSize: document.file_size,
-          mimeType: document.mime_type,
-          uploadDate: document.upload_date
+    // Prepare user data for scoring
+    const userData = {
+      userProfile: user,
+      documents,
+      transactions
+    };
+    
+    // Calculate advanced credit score using AI engine
+    const assessmentResult = await calculateScoreWithExternalData(userData);
+    
+    res.json({
+      userId: user.id,
+      ...assessmentResult
+    });
+  } catch (error) {
+    console.error('Error performing assessment:', error);
+    res.status(500).json({ error: 'Error performing assessment' });
+  }
+});
+
+// Get assessment history for a user
+router.get('/user/:userId/history', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    // In a real implementation, we would fetch actual assessment history
+    // For now, we'll return mock data
+    
+    res.json({
+      assessments: [
+        {
+          id: 1,
+          userId,
+          score: 75,
+          decision: 'APPROVE_WITH_CAP',
+          loanAmount: 10000,
+          date: new Date().toISOString(),
+          details: 'Initial assessment'
         }
-      });
-    } catch (error) {
-      console.error('Error saving document:', error);
-      res.status(500).json({ error: 'Error saving document' });
-    }
-  });
+      ]
+    });
+  } catch (error) {
+    console.error('Error fetching assessment history:', error);
+    res.status(500).json({ error: 'Error fetching assessment history' });
+  }
 });
 
 module.exports = router;

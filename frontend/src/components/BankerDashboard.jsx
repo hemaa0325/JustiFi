@@ -1,453 +1,295 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/BankerDashboard.css';
-import { getAllUsers, getUserDetails, getUserDocuments, downloadDocument } from '../services/bankerService';
-import { logout } from '../services/authService';
-import { t } from '../utils/localization';
+import { bankerService } from '../services/bankerService';
+import './BankerDashboard.css';
 
-const BankerDashboard = ({ onLogout, language }) => {
+const BankerDashboard = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [userDocuments, setUserDocuments] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
+  const [assessmentResult, setAssessmentResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterScore, setFilterScore] = useState('all');
-  const [filterDecision, setFilterDecision] = useState('all');
-  const [sortField, setSortField] = useState('name');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [activeTab, setActiveTab] = useState('users');
 
-  // Fetch all users on component mount
   useEffect(() => {
-    fetchAllUsers();
+    fetchUsers();
   }, []);
 
-  const fetchAllUsers = async () => {
-    setLoading(true);
-    setError('');
-    
+  const fetchUsers = async () => {
     try {
-      const usersData = await getAllUsers();
-      
-      // Fetch documents and detailed info for each user
-      const usersWithDetails = await Promise.all(usersData.map(async (user) => {
-        try {
-          // Get detailed user info with credit score
-          const userDetails = await getUserDetails(user.id);
-          
-          // Get user documents
-          const documents = await getUserDocuments(user.id);
-          
-          return { 
-            ...user, 
-            ...userDetails,
-            documents: documents || [] 
-          };
-        } catch (err) {
-          // If we can't fetch details for a user, continue with basic info
-          return { 
-            ...user, 
-            documents: [],
-            creditScore: 'N/A',
-            creditDecision: 'N/A'
-          };
-        }
-      }));
-      
-      setUsers(usersWithDetails);
-    } catch (err) {
-      setError(err.message);
+      setLoading(true);
+      const data = await bankerService.getAllUsers();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUserSelect = async (user) => {
-    setLoading(true);
-    setError('');
-    setSelectedUser(user);
-    
+  const fetchUserDetails = async (userId) => {
     try {
-      // Fetch user documents for detailed view
-      const documents = await getUserDocuments(user.id);
-      setUserDocuments(documents);
-    } catch (err) {
-      setError(err.message);
+      setLoading(true);
+      const data = await bankerService.getUserDetails(userId);
+      setUserDetails(data);
+      setSelectedUser(data.user);
+      setActiveTab('assessment');
+    } catch (error) {
+      console.error('Error fetching user details:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDownloadDocument = async (docId) => {
+  const performAssessment = async (userId) => {
     try {
-      await downloadDocument(docId);
-    } catch (err) {
-      setError(err.message);
+      setLoading(true);
+      const data = await bankerService.performAssessment(userId);
+      setAssessmentResult(data);
+      setActiveTab('results');
+    } catch (error) {
+      console.error('Error performing assessment:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleBackToUsers = () => {
+  const resetSelection = () => {
     setSelectedUser(null);
-    setUserDocuments([]);
+    setUserDetails(null);
+    setAssessmentResult(null);
+    setActiveTab('users');
   };
 
-  const handleLogout = () => {
-    logout();
-    onLogout();
-  };
+  const renderUsersList = () => (
+    <div className="users-list">
+      <h2>All Users</h2>
+      {loading ? (
+        <p>Loading users...</p>
+      ) : (
+        <table className="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Occupation</th>
+              <th>Credit Score</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr key={user.id}>
+                <td>{user.fullName || user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.occupation || 'N/A'}</td>
+                <td>{user.creditScore || 'Not assessed'}</td>
+                <td>
+                  <button onClick={() => fetchUserDetails(user.id)}>
+                    Assess
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
 
-  const getCreditScoreColor = (score) => {
-    if (score >= 80) return 'high-score';
-    if (score >= 60) return 'medium-score';
-    if (score >= 45) return 'low-score';
-    return 'very-low-score';
-  };
-
-  const getCreditDecisionColor = (decision) => {
-    switch (decision) {
-      case 'APPROVE': return 'approve';
-      case 'APPROVE_WITH_CAP': return 'approve-with-cap';
-      case 'REVIEW': return 'review';
-      case 'REJECT': return 'reject';
-      default: return '';
-    }
-  };
-
-  // Filter and sort users
-  const filteredAndSortedUsers = users
-    .filter(user => {
-      // Search filter - check name, email, and username
-      const matchesSearch = 
-        (user.full_name && user.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()));
+  const renderAssessmentPanel = () => (
+    <div className="assessment-panel">
+      <div className="panel-header">
+        <h2>User Assessment: {selectedUser?.fullName || selectedUser?.username}</h2>
+        <button onClick={resetSelection} className="back-button">Back to Users</button>
+      </div>
       
-      // Score filter
-      const matchesScore = filterScore === 'all' || 
-        (filterScore === 'excellent' && user.creditScore >= 80) ||
-        (filterScore === 'good' && user.creditScore >= 60 && user.creditScore < 80) ||
-        (filterScore === 'fair' && user.creditScore >= 45 && user.creditScore < 60) ||
-        (filterScore === 'poor' && user.creditScore < 45);
-      
-      // Decision filter
-      const matchesDecision = filterDecision === 'all' || user.creditDecision === filterDecision;
-      
-      return matchesSearch && matchesScore && matchesDecision;
-    })
-    .sort((a, b) => {
-      let aValue, bValue;
-      
-      switch (sortField) {
-        case 'name':
-          aValue = (a.full_name || a.username || '').toLowerCase();
-          bValue = (b.full_name || b.username || '').toLowerCase();
-          break;
-        case 'email':
-          aValue = (a.email || '').toLowerCase();
-          bValue = (b.email || '').toLowerCase();
-          break;
-        case 'score':
-          aValue = a.creditScore || 0;
-          bValue = b.creditScore || 0;
-          break;
-        case 'decision':
-          aValue = (a.creditDecision || '').toLowerCase();
-          bValue = (b.creditDecision || '').toLowerCase();
-          break;
-        default:
-          return 0;
-      }
-      
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
+      {userDetails && (
+        <div className="user-details">
+          <h3>User Information</h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <label>Email:</label>
+              <span>{userDetails.user.email}</span>
+            </div>
+            <div className="info-item">
+              <label>Phone:</label>
+              <span>{userDetails.user.phone || 'N/A'}</span>
+            </div>
+            <div className="info-item">
+              <label>Address:</label>
+              <span>{userDetails.user.address || 'N/A'}</span>
+            </div>
+            <div className="info-item">
+              <label>Occupation:</label>
+              <span>{userDetails.user.occupation || 'N/A'}</span>
+            </div>
+          </div>
+          
+          <h3>Submitted Documents ({userDetails.documents.length})</h3>
+          <div className="documents-list">
+            {userDetails.documents.length > 0 ? (
+              userDetails.documents.map(doc => (
+                <div key={doc.id} className="document-item">
+                  <span>{doc.name}</span>
+                  <span className="doc-type">({doc.type})</span>
+                </div>
+              ))
+            ) : (
+              <p>No documents submitted</p>
+            )}
+          </div>
+          
+          <h3>Transaction History ({userDetails.transactions.length} items)</h3>
+          <div className="transactions-list">
+            {userDetails.transactions.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userDetails.transactions.slice(0, 10).map(transaction => (
+                    <tr key={transaction.id}>
+                      <td>{new Date(transaction.date).toLocaleDateString()}</td>
+                      <td>{transaction.description}</td>
+                      <td>${Math.abs(transaction.amount).toFixed(2)}</td>
+                      <td>{transaction.category || 'N/A'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No transaction history available</p>
+            )}
+          </div>
+          
+          <button 
+            onClick={() => performAssessment(selectedUser.id)} 
+            className="assess-button"
+            disabled={loading}
+          >
+            {loading ? 'Analyzing...' : 'Perform Advanced AI Assessment'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
+  const renderResults = () => (
+    <div className="results-panel">
+      <div className="panel-header">
+        <h2>AI Assessment Results</h2>
+        <button onClick={resetSelection} className="back-button">Back to Users</button>
+      </div>
+      
+      {assessmentResult && (
+        <div className="results-content">
+          <div className={`score-card ${getScoreClass(assessmentResult.score)}`}>
+            <h3>Credit Score</h3>
+            <div className="score-value">{assessmentResult.score}/100</div>
+            <div className="decision">
+              Decision: <strong>{assessmentResult.decision.replace('_', ' ')}</strong>
+            </div>
+            <div className="loan-amount">
+              Recommended Loan Amount: <strong>${assessmentResult.loanAmount.toLocaleString()}</strong>
+            </div>
+          </div>
+          
+          <div className="message-section">
+            <h3>AI Analysis Summary</h3>
+            <p>{assessmentResult.message}</p>
+          </div>
+          
+          <div className="detailed-analysis">
+            <h3>Detailed Component Scores</h3>
+            <div className="component-scores">
+              {Object.entries(assessmentResult.componentScores).map(([component, data]) => (
+                <div key={component} className="component-score">
+                  <div className="component-name">{component.replace(/([A-Z])/g, ' $1')}</div>
+                  <div className="component-value">{data.score}/50</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="reasons-section">
+            <h3>Scoring Factors</h3>
+            <ul className="reasons-list">
+              {assessmentResult.reasons.map((reason, index) => (
+                <li key={index}>{reason}</li>
+              ))}
+            </ul>
+          </div>
+          
+          <div className="external-data">
+            <h3>External Credit Bureau Data</h3>
+            <div className="external-info">
+              <div className="info-item">
+                <label>External Score:</label>
+                <span>{assessmentResult.externalData.score}</span>
+              </div>
+              <div className="info-item">
+                <label>Inquiries:</label>
+                <span>{assessmentResult.externalData.inquiries}</span>
+              </div>
+              <div className="info-item">
+                <label>Derogatory Marks:</label>
+                <span>{assessmentResult.externalData.derogatoryMarks}</span>
+              </div>
+              <div className="info-item">
+                <label>Credit Age:</label>
+                <span>{Math.floor(assessmentResult.externalData.creditAgeMonths / 12)} years</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
-  const renderSortIndicator = (field) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' ? ' ↑' : ' ↓';
-  };
-
-  // Clear all filters
-  const clearFilters = () => {
-    setSearchTerm('');
-    setFilterScore('all');
-    setFilterDecision('all');
+  const getScoreClass = (score) => {
+    if (score >= 80) return 'excellent';
+    if (score >= 65) return 'good';
+    if (score >= 50) return 'fair';
+    return 'poor';
   };
 
   return (
     <div className="banker-dashboard">
       <header className="dashboard-header">
-        <h1>{t('banker_dashboard', language)}</h1>
-        <div className="header-actions">
-          <button className="logout-button" onClick={handleLogout}>
-            {t('logout', language)}
+        <h1>Banker Dashboard</h1>
+        <nav className="dashboard-tabs">
+          <button 
+            className={activeTab === 'users' ? 'active' : ''}
+            onClick={() => setActiveTab('users')}
+          >
+            Users
           </button>
-        </div>
+          <button 
+            className={activeTab === 'assessment' ? 'active' : ''}
+            onClick={() => selectedUser && setActiveTab('assessment')}
+            disabled={!selectedUser}
+          >
+            Assessment
+          </button>
+          <button 
+            className={activeTab === 'results' ? 'active' : ''}
+            onClick={() => assessmentResult && setActiveTab('results')}
+            disabled={!assessmentResult}
+          >
+            Results
+          </button>
+        </nav>
       </header>
-
+      
       <main className="dashboard-content">
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
-
-        {loading && (
-          <div className="loading">
-            {t('loading', language)}...
-          </div>
-        )}
-
-        {/* User List View */}
-        {!selectedUser ? (
-          <div className="users-list">
-            <div className="dashboard-controls">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder={t('search_users', language)}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
-              </div>
-              
-              <div className="filters">
-                <select 
-                  value={filterScore} 
-                  onChange={(e) => setFilterScore(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="all">{t('all_scores', language)}</option>
-                  <option value="excellent">{t('excellent', language)}</option>
-                  <option value="good">{t('good', language)}</option>
-                  <option value="fair">{t('fair', language)}</option>
-                  <option value="poor">{t('poor', language)}</option>
-                </select>
-                
-                <select 
-                  value={filterDecision} 
-                  onChange={(e) => setFilterDecision(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="all">{t('all_decisions', language)}</option>
-                  <option value="APPROVE">{t('approve', language)}</option>
-                  <option value="APPROVE_WITH_CAP">{t('approve_with_cap', language)}</option>
-                  <option value="REVIEW">{t('review', language)}</option>
-                  <option value="REJECT">{t('reject', language)}</option>
-                </select>
-                
-                <button onClick={clearFilters} className="clear-filters-button">
-                  {t('clear_filters', language)}
-                </button>
-                
-                <button onClick={fetchAllUsers} className="refresh-button">
-                  {t('refresh', language)}
-                </button>
-              </div>
-            </div>
-            
-            <div className="users-table-container">
-              <table className="users-table">
-                <thead>
-                  <tr>
-                    <th onClick={() => handleSort('name')} className="sortable">
-                      {t('name', language)}{renderSortIndicator('name')}
-                    </th>
-                    <th onClick={() => handleSort('email')} className="sortable">
-                      {t('email', language)}{renderSortIndicator('email')}
-                    </th>
-                    <th>{t('documents', language)}</th>
-                    <th onClick={() => handleSort('score')} className="sortable">
-                      {t('credit_score', language)}{renderSortIndicator('score')}
-                    </th>
-                    <th onClick={() => handleSort('decision')} className="sortable">
-                      {t('credit_decision', language)}{renderSortIndicator('decision')}
-                    </th>
-                    <th>{t('actions', language)}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAndSortedUsers.map(user => (
-                    <tr key={user.id} className="user-row">
-                      <td>
-                        <div className="user-info">
-                          <div className="user-name">
-                            {user.full_name || user.username}
-                          </div>
-                          <div className="user-email-mobile">{user.email}</div>
-                        </div>
-                      </td>
-                      <td>{user.email}</td>
-                      <td>
-                        <div className="documents-cell">
-                          {user.documents.length > 0 ? (
-                            <div className="documents-list">
-                              {user.documents.map(doc => (
-                                <div key={doc.id} className="document-item">
-                                  <span className="document-name" title={doc.name}>{doc.name}</span>
-                                  <button 
-                                    className="document-download"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDownloadDocument(doc.id);
-                                    }}
-                                  >
-                                    {t('download', language)}
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="no-documents">{t('no_documents', language)}</span>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="score-cell">
-                          <span className={`score-value ${getCreditScoreColor(user.creditScore)}`}>
-                            {user.creditScore}
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="decision-cell">
-                          <span className={`decision-badge ${getCreditDecisionColor(user.creditDecision)}`}>
-                            {user.creditDecision ? t(user.creditDecision.toLowerCase(), language) : 'N/A'}
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <button 
-                          className="view-details-button"
-                          onClick={() => handleUserSelect(user)}
-                        >
-                          {t('view_details', language)}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              
-              {filteredAndSortedUsers.length === 0 && !loading && (
-                <div className="no-users-message">
-                  {t('no_users_found', language)}
-                </div>
-              )}
-            </div>
-            
-            {/* Summary Stats */}
-            <div className="dashboard-summary">
-              <div className="summary-card">
-                <h3>{t('total_users', language)}</h3>
-                <p>{users.length}</p>
-              </div>
-              <div className="summary-card">
-                <h3>{t('filtered_users', language)}</h3>
-                <p>{filteredAndSortedUsers.length}</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* User Details View */
-          <div className="user-details">
-            <button className="back-button" onClick={handleBackToUsers}>
-              ← {t('back_to_users', language)}
-            </button>
-            
-            <div className="user-profile">
-              <h2>{t('user_profile', language)}</h2>
-              <div className="profile-grid">
-                <div className="profile-field">
-                  <label>{t('name', language)}:</label>
-                  <span>{selectedUser.full_name || selectedUser.username}</span>
-                </div>
-                <div className="profile-field">
-                  <label>{t('email', language)}:</label>
-                  <span>{selectedUser.email}</span>
-                </div>
-                <div className="profile-field">
-                  <label>{t('phone', language)}:</label>
-                  <span>{selectedUser.phone || 'N/A'}</span>
-                </div>
-                <div className="profile-field">
-                  <label>{t('address', language)}:</label>
-                  <span>{selectedUser.address || 'N/A'}</span>
-                </div>
-                <div className="profile-field">
-                  <label>{t('occupation', language)}:</label>
-                  <span>{selectedUser.occupation || 'N/A'}</span>
-                </div>
-                <div className="profile-field">
-                  <label>{t('credit_score', language)}:</label>
-                  <span className={`score-value ${getCreditScoreColor(selectedUser.creditScore)}`}>
-                    {selectedUser.creditScore}
-                  </span>
-                </div>
-                <div className="profile-field">
-                  <label>{t('credit_decision', language)}:</label>
-                  <span className={`decision-badge ${getCreditDecisionColor(selectedUser.creditDecision)}`}>
-                    {t(selectedUser.creditDecision.toLowerCase(), language)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="user-documents">
-              <h2>{t('uploaded_documents', language)}</h2>
-              {userDocuments.length > 0 ? (
-                <div className="documents-grid">
-                  {userDocuments.map(doc => (
-                    <div key={doc.id} className="document-card">
-                      <div className="document-info">
-                        <h3>{doc.name}</h3>
-                        <p className="document-meta">
-                          <span className="document-type">{doc.type.toUpperCase()}</span>
-                          <span className="document-size">{doc.size}</span>
-                          <span className="document-date">{doc.uploadDate}</span>
-                        </p>
-                      </div>
-                      <button 
-                        className="download-button"
-                        onClick={() => handleDownloadDocument(doc.id)}
-                      >
-                        {t('download', language)}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>{t('no_documents_uploaded', language)}</p>
-              )}
-            </div>
-
-            {/* Credit Score Justification */}
-            <div className="credit-justification">
-              <h2>{t('score_justification', language)}</h2>
-              {selectedUser.reasons && selectedUser.reasons.length > 0 ? (
-                <ul className="justification-list">
-                  {selectedUser.reasons.map((reason, index) => (
-                    <li key={index} className="justification-item">
-                      {reason}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>{t('no_data_available', language)}</p>
-              )}
-            </div>
-          </div>
-        )}
+        {activeTab === 'users' && renderUsersList()}
+        {activeTab === 'assessment' && renderAssessmentPanel()}
+        {activeTab === 'results' && renderResults()}
       </main>
     </div>
   );
