@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { getAllUsers, getUserById, getUserDocuments } = require('../db/fileDatabase');
+const { getAllUsers, getUserById, getDocumentsByUserId } = require('../db/fileDatabase');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'trusttap_secret_key';
 
@@ -34,7 +34,7 @@ router.get('/users', (req, res) => {
       // Assign specific scores for default users
       let scoreData;
       
-      if (user.id === 1) {
+      if (user.id === '1') {
         // Alice Johnson - Score: 60
         scoreData = {
           score: 60,
@@ -42,7 +42,7 @@ router.get('/users', (req, res) => {
           loanAmount: 5000,
           message: 'Approved with a capped amount based on your financial history.'
         };
-      } else if (user.id === 2) {
+      } else if (user.id === '2') {
         // Bob Smith - Score: 20
         scoreData = {
           score: 20,
@@ -186,15 +186,15 @@ router.get('/documents/:userId', (req, res) => {
     }
     
     // Get actual documents from database
-    const documents = getUserDocuments(userId);
+    const documents = getDocumentsByUserId(userId);
     
     // Format documents for frontend
     const formattedDocuments = documents.map(doc => ({
       id: doc.id,
-      name: doc.original_name,
-      type: doc.mime_type.split('/')[1] || doc.mime_type,
-      size: formatFileSize(doc.file_size),
-      uploadDate: new Date(doc.upload_date).toLocaleDateString()
+      name: doc.name,
+      type: doc.type,
+      size: formatFileSize(doc.size),
+      uploadDate: new Date(doc.uploadedAt).toLocaleDateString()
     }));
     
     res.json({
