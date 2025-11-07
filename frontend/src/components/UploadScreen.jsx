@@ -17,6 +17,10 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     salaryReceipt: false,
     bankStatement: false
   });
+  const [uploadedFileIds, setUploadedFileIds] = useState({
+    salaryReceipt: null,
+    bankStatement: null
+  });
   const [creditScoreResult, setCreditScoreResult] = useState(null);
 
   // Fetch demo users on component mount
@@ -39,6 +43,9 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     setSalaryReceipt(selectedFile);
     setUploadStatus('');
     setCreditScoreResult(null); // Reset analysis when new file is selected
+    // Reset upload status when new file is selected
+    setUploadedFiles(prev => ({ ...prev, salaryReceipt: false }));
+    setUploadedFileIds(prev => ({ ...prev, salaryReceipt: null }));
   };
 
   const handleBankStatementChange = (event) => {
@@ -46,6 +53,9 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     setBankStatement(selectedFile);
     setUploadStatus('');
     setCreditScoreResult(null); // Reset analysis when new file is selected
+    // Reset upload status when new file is selected
+    setUploadedFiles(prev => ({ ...prev, bankStatement: false }));
+    setUploadedFileIds(prev => ({ ...prev, bankStatement: null }));
   };
 
   const handleSalaryReceiptUpload = async () => {
@@ -80,6 +90,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
       }
 
       setUploadedFiles(prev => ({ ...prev, salaryReceipt: true }));
+      setUploadedFileIds(prev => ({ ...prev, salaryReceipt: result.document.id }));
       setUploadStatus(t('salary_receipt_uploaded_successfully', language));
     } catch (error) {
       console.error('Error uploading salary receipt:', error);
@@ -121,6 +132,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
       }
 
       setUploadedFiles(prev => ({ ...prev, bankStatement: true }));
+      setUploadedFileIds(prev => ({ ...prev, bankStatement: result.document.id }));
       setUploadStatus(t('bank_statement_uploaded_successfully', language));
     } catch (error) {
       console.error('Error uploading bank statement:', error);
@@ -208,9 +220,11 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
               <button 
                 className="secondary-button" 
                 onClick={handleSalaryReceiptUpload}
-                disabled={isUploading || !salaryReceipt}
+                disabled={isUploading || !salaryReceipt || uploadedFiles.salaryReceipt}
               >
-                {isUploading ? t('uploading', language) : t('upload_salary_receipt_button', language)}
+                {isUploading ? t('uploading', language) : 
+                 uploadedFiles.salaryReceipt ? t('uploaded', language) : 
+                 t('upload_salary_receipt_button', language)}
               </button>
               
               {uploadedFiles.salaryReceipt && (
@@ -237,9 +251,11 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
               <button 
                 className="secondary-button" 
                 onClick={handleBankStatementUpload}
-                disabled={isUploading || !bankStatement}
+                disabled={isUploading || !bankStatement || uploadedFiles.bankStatement}
               >
-                {isUploading ? t('uploading', language) : t('upload_bank_statement_button', language)}
+                {isUploading ? t('uploading', language) : 
+                 uploadedFiles.bankStatement ? t('uploaded', language) : 
+                 t('upload_bank_statement_button', language)}
               </button>
               
               {uploadedFiles.bankStatement && (
@@ -296,6 +312,7 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
           onRestart={() => {
             setCreditScoreResult(null);
             setUploadedFiles({ salaryReceipt: false, bankStatement: false });
+            setUploadedFileIds({ salaryReceipt: null, bankStatement: null });
             setSalaryReceipt(null);
             setBankStatement(null);
           }}

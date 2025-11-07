@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend Test</title>
+</head>
+<body>
+    <h1>Frontend Test</h1>
+    <button id="loginBtn">Login First</button>
+    <button id="testBtn" disabled>Test Assessment</button>
+    <div id="result"></div>
+
+    <script>
+        let authToken = null;
+        let currentUser = null;
+        
+        // Login function
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        identifier: 'newuser',
+                        password: 'newpass'
+                    }),
+                });
+                
+                const result = await response.json();
+                console.log('Login result:', result);
+                
+                if (response.ok) {
+                    authToken = result.token;
+                    currentUser = result.user;
+                    document.getElementById('testBtn').disabled = false;
+                    document.getElementById('result').innerHTML = '<p>✅ Logged in successfully</p>';
+                    console.log('✅ Logged in successfully');
+                } else {
+                    document.getElementById('result').innerHTML = '<p>❌ Login failed: ' + result.error + '</p>';
+                    console.log('❌ Login failed:', result.error);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('result').innerHTML = '<p>Login error: ' + error.message + '</p>';
+            }
+        });
+        
+        // Test assessment function
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            try {
+                console.log('Current user:', currentUser);
+                
+                // Test the assessment endpoint
+                const response = await fetch('/api/assess/user/' + currentUser.id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: currentUser.id
+                    }),
+                });
+                
+                const result = await response.json();
+                console.log('Assessment result:', result);
+                
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+                
+                if (response.ok) {
+                    console.log('✅ Assessment endpoint works correctly');
+                } else {
+                    console.log('❌ Assessment endpoint failed:', result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = '<p>Error: ' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>
