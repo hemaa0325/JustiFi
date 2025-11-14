@@ -1,0 +1,2789 @@
+[
+  {
+    "id": "mhwzxjixn491ub2imwo",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "UPDATE_PROFILE",
+    "old_value": {
+      "id": "mhwz8qfkm3vggc79ied",
+      "username": "admin",
+      "email": "admin@justifi.com",
+      "name": "Admin User",
+      "phone": "",
+      "address": "",
+      "occupation": "System Administrator",
+      "role": "admin",
+      "created_at": "2025-11-13T05:17:01.660Z",
+      "creditScore": null,
+      "assessed": false
+    },
+    "new_value": {
+      "id": "mhwz8qfkm3vggc79ied",
+      "username": "admin",
+      "email": "updated@example.com",
+      "name": "Updated Name",
+      "phone": "123-456-7890",
+      "address": "123 New Address",
+      "occupation": "Software Engineer",
+      "role": "admin",
+      "created_at": "2025-11-13T05:17:01.660Z",
+      "creditScore": null,
+      "assessed": false
+    },
+    "timestamp": "2025-11-13T05:36:18.969Z"
+  },
+  {
+    "id": "mhx2225waqnukd9fp96",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_USER",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2225s5xheayo1xjn",
+      "username": "ara",
+      "email": "ara@gmail.com",
+      "name": "ara",
+      "phone": "",
+      "address": "",
+      "occupation": "",
+      "role": "user",
+      "created_at": "2025-11-13T06:35:48.976Z",
+      "creditScore": null,
+      "assessed": false
+    },
+    "timestamp": "2025-11-13T06:35:48.980Z"
+  },
+  {
+    "id": "mhx2226a63w7hik7bsn",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "USER_SIGNUP",
+    "old_value": null,
+    "new_value": {
+      "username": "ara",
+      "email": "ara@gmail.com"
+    },
+    "timestamp": "2025-11-13T06:35:48.994Z"
+  },
+  {
+    "id": "mhx2adkdbctdj0wnlwh",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T06:42:17.005Z"
+  },
+  {
+    "id": "mhx2adlcg0h072xtlmi",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T06:42:17.040Z"
+  },
+  {
+    "id": "mhx2adlxa31v5vpttea",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T06:42:17.061Z"
+  },
+  {
+    "id": "mhx2arsvyfuehreiodb",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2arstkobu2hnqhob",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "salary_receipt": "/uploads/document-1763016155443-519343936.jpg",
+      "uploadedAt": "2025-11-13T06:42:35.453Z"
+    },
+    "timestamp": "2025-11-13T06:42:35.455Z"
+  },
+  {
+    "id": "mhx2arsw9c1mfp1jtiq",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx2arstkobu2hnqhob",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-13T06:42:35.456Z"
+  },
+  {
+    "id": "mhx2b0k9stq20jyun4",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2b0k7ka959xxx1ns",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "bank_statement": "/uploads/document-1763016166798-896451632.jpg",
+      "uploadedAt": "2025-11-13T06:42:46.807Z"
+    },
+    "timestamp": "2025-11-13T06:42:46.809Z"
+  },
+  {
+    "id": "mhx2b0ka9tb49efzo2i",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx2b0k7ka959xxx1ns",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-13T06:42:46.810Z"
+  },
+  {
+    "id": "mhx2b1uzhjmz7pyblsa",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2b1uwx4r0sueaa6k",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "score": 67,
+      "risk_level": "okay",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 10,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 5,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 15,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 5,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 10,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-13T06:42:48.488Z"
+    },
+    "timestamp": "2025-11-13T06:42:48.491Z"
+  },
+  {
+    "id": "mhx2b1v0ygj472bg98s",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhx2b1uwx4r0sueaa6k",
+      "score": 67,
+      "decision": "APPROVE_WITH_CAP",
+      "loanAmount": 5000
+    },
+    "timestamp": "2025-11-13T06:42:48.492Z"
+  },
+  {
+    "id": "mhx2om64qe573lnhz9f",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T06:53:21.340Z"
+  },
+  {
+    "id": "mhx2om6y2u3ue0zdwnd",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T06:53:21.370Z"
+  },
+  {
+    "id": "mhx2om792j5c6k080m9",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T06:53:21.381Z"
+  },
+  {
+    "id": "mhx2r5ah3f64xvlwv3v",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2r5afgzvm3abhv2d",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "salary_receipt": "/uploads/document-1763016919420-123438370.jpg",
+      "uploadedAt": "2025-11-13T06:55:19.431Z"
+    },
+    "timestamp": "2025-11-13T06:55:19.433Z"
+  },
+  {
+    "id": "mhx2r5aigw6mf32zohn",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx2r5afgzvm3abhv2d",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-13T06:55:19.434Z"
+  },
+  {
+    "id": "mhx2rf62627qcblqi9x",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2rf6088smjgpgx4f",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "bank_statement": "/uploads/document-1763016932226-789604862.jpg",
+      "uploadedAt": "2025-11-13T06:55:32.232Z"
+    },
+    "timestamp": "2025-11-13T06:55:32.234Z"
+  },
+  {
+    "id": "mhx2rf63ysz1ab5yyi",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx2rf6088smjgpgx4f",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-13T06:55:32.235Z"
+  },
+  {
+    "id": "mhx2rhalyetke2snuao",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2rhaj2bm26t9lttv",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "bank_statement": "/uploads/document-1763016934978-244819270.jpg",
+      "uploadedAt": "2025-11-13T06:55:34.987Z"
+    },
+    "timestamp": "2025-11-13T06:55:34.989Z"
+  },
+  {
+    "id": "mhx2rhao2hpex15x53u",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx2rhaj2bm26t9lttv",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-13T06:55:34.992Z"
+  },
+  {
+    "id": "mhx2ril2z2qr1n1dqx9",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2ril0xlw3nrlhyus",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "score": 74,
+      "risk_level": "okay",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 10,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 5,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 15,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 5,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 10,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-13T06:55:36.660Z"
+    },
+    "timestamp": "2025-11-13T06:55:36.662Z"
+  },
+  {
+    "id": "mhx2ril4ykmk2zd0bfg",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhx2ril0xlw3nrlhyus",
+      "score": 74,
+      "decision": "APPROVE",
+      "loanAmount": 7500
+    },
+    "timestamp": "2025-11-13T06:55:36.664Z"
+  },
+  {
+    "id": "mhx2rledocv28n7g9hk",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx2rlead6fvh7awc7c",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "score": 78,
+      "risk_level": "okay",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 10,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 5,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 15,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 5,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 10,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-13T06:55:40.306Z"
+    },
+    "timestamp": "2025-11-13T06:55:40.309Z"
+  },
+  {
+    "id": "mhx2rlef9lxsly96uw4",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhx2rlead6fvh7awc7c",
+      "score": 78,
+      "decision": "APPROVE",
+      "loanAmount": 7500
+    },
+    "timestamp": "2025-11-13T06:55:40.311Z"
+  },
+  {
+    "id": "mhx3axlwsdjl8q4hlvb",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T07:10:42.596Z"
+  },
+  {
+    "id": "mhx3axpe5w8qybw75sm",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:10:42.722Z"
+  },
+  {
+    "id": "mhx3axqei83bwlfex9g",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:10:42.758Z"
+  },
+  {
+    "id": "mhx3bgemz5qaedlvnx8",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3bgekhew903piuqq",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "salary_receipt": "/uploads/document-1763017866930-732866893.jpg",
+      "uploadedAt": "2025-11-13T07:11:06.956Z"
+    },
+    "timestamp": "2025-11-13T07:11:06.958Z"
+  },
+  {
+    "id": "mhx3bgeoaq48k5jwaoe",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx3bgekhew903piuqq",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-13T07:11:06.960Z"
+  },
+  {
+    "id": "mhx3br7v91o1w8egugq",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3br7sgsxp3tf4108",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "bank_statement": "/uploads/document-1763017880918-499363993.jpg",
+      "uploadedAt": "2025-11-13T07:11:20.968Z"
+    },
+    "timestamp": "2025-11-13T07:11:20.971Z"
+  },
+  {
+    "id": "mhx3br7xqmzmw2fjo3q",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx3br7sgsxp3tf4108",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-13T07:11:20.973Z"
+  },
+  {
+    "id": "mhx3bsp46aeya20vt35",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3bsoz51jj69o8gpo",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "score": 83,
+      "risk_level": "very safe",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 20,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 15,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 25,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 10,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 20,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-13T07:11:22.883Z"
+    },
+    "timestamp": "2025-11-13T07:11:22.888Z"
+  },
+  {
+    "id": "mhx3bsp78k4yurejg7",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhx3bsoz51jj69o8gpo",
+      "score": 83,
+      "decision": "APPROVE",
+      "loanAmount": 10000
+    },
+    "timestamp": "2025-11-13T07:11:22.891Z"
+  },
+  {
+    "id": "mhx3c75sawzi4z9pt84",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3c75o26h3c0jkyzi",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "amount": 10000,
+      "assessment_id": "mhx3bsoz51jj69o8gpo",
+      "status": "pending",
+      "created_at": "2025-11-13T07:11:41.628Z",
+      "updated_at": "2025-11-13T07:11:41.628Z"
+    },
+    "timestamp": "2025-11-13T07:11:41.632Z"
+  },
+  {
+    "id": "mhx3d5zveyetfybz6d",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T07:12:26.779Z"
+  },
+  {
+    "id": "mhx3d6153ta1pn6x524",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:12:26.825Z"
+  },
+  {
+    "id": "mhx3d61o9x8dmcmiyqm",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:12:26.844Z"
+  },
+  {
+    "id": "mhx3ebwjybdbtfd3z2",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3ebwg48neu7v022m",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "salary_receipt": "/uploads/document-1763018001084-872878255.jpg",
+      "uploadedAt": "2025-11-13T07:13:21.088Z"
+    },
+    "timestamp": "2025-11-13T07:13:21.091Z"
+  },
+  {
+    "id": "mhx3ebwlonrf4cgld3",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx3ebwg48neu7v022m",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-13T07:13:21.093Z"
+  },
+  {
+    "id": "mhx3edh151xgufks3l9",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3edgze6q863x8vma",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "bank_statement": "/uploads/document-1763018003116-837566441.jpg",
+      "uploadedAt": "2025-11-13T07:13:23.123Z"
+    },
+    "timestamp": "2025-11-13T07:13:23.125Z"
+  },
+  {
+    "id": "mhx3edh33m9tap4au2y",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx3edgze6q863x8vma",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-13T07:13:23.127Z"
+  },
+  {
+    "id": "mhx3ef8rpgkinejslc",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3ef8nimbmf3sudj",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "score": 77,
+      "risk_level": "okay",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 10,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 5,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 15,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 5,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 10,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-13T07:13:25.415Z"
+    },
+    "timestamp": "2025-11-13T07:13:25.419Z"
+  },
+  {
+    "id": "mhx3ef8t5urfhuxclg6",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhx3ef8nimbmf3sudj",
+      "score": 77,
+      "decision": "APPROVE",
+      "loanAmount": 7500
+    },
+    "timestamp": "2025-11-13T07:13:25.421Z"
+  },
+  {
+    "id": "mhx3ekpmro96j1ud8l",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx3ekphp3xbj2hqfee",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "amount": 7500,
+      "assessment_id": "mhx3ef8nimbmf3sudj",
+      "status": "pending",
+      "created_at": "2025-11-13T07:13:32.501Z",
+      "updated_at": "2025-11-13T07:13:32.501Z"
+    },
+    "timestamp": "2025-11-13T07:13:32.506Z"
+  },
+  {
+    "id": "mhx4hq9jj6j980xbpss",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T07:43:59.287Z"
+  },
+  {
+    "id": "mhx4hqa801x9yxk07vsi",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:43:59.312Z"
+  },
+  {
+    "id": "mhx4hqag71obr0jndf4",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:43:59.320Z"
+  },
+  {
+    "id": "mhx4ibpu89i1rvkdu7q",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx4ibpso23pwr97tl",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "salary_receipt": "/uploads/document-1763019867084-107917209.jpg",
+      "uploadedAt": "2025-11-13T07:44:27.088Z"
+    },
+    "timestamp": "2025-11-13T07:44:27.090Z"
+  },
+  {
+    "id": "mhx4ibpv66q1i8hsvtc",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx4ibpso23pwr97tl",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-13T07:44:27.091Z"
+  },
+  {
+    "id": "mhx4icxgdsrpk4dhhlr",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx4icxfbd3wvmgi6q9",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "bank_statement": "/uploads/document-1763019868656-155410911.jpg",
+      "uploadedAt": "2025-11-13T07:44:28.659Z"
+    },
+    "timestamp": "2025-11-13T07:44:28.660Z"
+  },
+  {
+    "id": "mhx4icxikffuji39dza",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhx4icxfbd3wvmgi6q9",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-13T07:44:28.662Z"
+  },
+  {
+    "id": "mhx4iflano4n47ju9cq",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx4ifl5o5e9qk5i9h",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "score": 87,
+      "risk_level": "very safe",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 20,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 15,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 25,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 10,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 20,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-13T07:44:32.105Z"
+    },
+    "timestamp": "2025-11-13T07:44:32.110Z"
+  },
+  {
+    "id": "mhx4iflb1k6sqmsln46",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhx4ifl5o5e9qk5i9h",
+      "score": 87,
+      "decision": "APPROVE",
+      "loanAmount": 10000
+    },
+    "timestamp": "2025-11-13T07:44:32.111Z"
+  },
+  {
+    "id": "mhx4ik1subw706ntofb",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "CREATE_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "id": "mhx4ik1q49luogl5z7d",
+      "user_id": "mhx2225s5xheayo1xjn",
+      "amount": 10000,
+      "assessment_id": "mhx4ifl5o5e9qk5i9h",
+      "status": "pending",
+      "created_at": "2025-11-13T07:44:37.886Z",
+      "updated_at": "2025-11-13T07:44:37.886Z"
+    },
+    "timestamp": "2025-11-13T07:44:37.888Z"
+  },
+  {
+    "id": "mhx4j8cs7tuakofo1sk",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:45:09.388Z"
+  },
+  {
+    "id": "mhx4j8d5qt7bqm5yv",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:45:09.401Z"
+  },
+  {
+    "id": "mhx4jry6hh0z9b2lqp",
+    "user_id": null,
+    "role": "anonymous",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "bob@gmail.com",
+      "reason": "User not found"
+    },
+    "timestamp": "2025-11-13T07:45:34.782Z"
+  },
+  {
+    "id": "mhx4mzrdgqdunw1pmn",
+    "user_id": null,
+    "role": "anonymous",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "bob@gmail.com",
+      "reason": "User not found"
+    },
+    "timestamp": "2025-11-13T07:48:04.873Z"
+  },
+  {
+    "id": "mhx4nkgq5x647zrg7zr",
+    "user_id": null,
+    "role": "anonymous",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker@gmail.com",
+      "reason": "User not found"
+    },
+    "timestamp": "2025-11-13T07:48:31.706Z"
+  },
+  {
+    "id": "mhx4sfv3evw9z602ajk",
+    "user_id": null,
+    "role": "anonymous",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker@gmail.com",
+      "reason": "User not found"
+    },
+    "timestamp": "2025-11-13T07:52:19.023Z"
+  },
+  {
+    "id": "mhx4toybfug1vkrwg7v",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T07:53:17.459Z"
+  },
+  {
+    "id": "mhx4toysal37b9dvnve",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T07:53:17.476Z"
+  },
+  {
+    "id": "mhx4toz43oc2nxkucw2",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T07:53:17.488Z"
+  },
+  {
+    "id": "mhx4u0bfgppid5u9yve",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_LOAN_REQUESTS",
+    "old_value": null,
+    "new_value": {
+      "loanRequestCount": 3
+    },
+    "timestamp": "2025-11-13T07:53:32.187Z"
+  },
+  {
+    "id": "mhx4u41911mthsxunit",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "banker",
+    "action": "UPDATE_LOAN_STATUS_APPROVED",
+    "old_value": {
+      "status": "pending"
+    },
+    "new_value": {
+      "status": "approved",
+      "updatedBy": "mhwz8qjj5ke6ri0jrl7"
+    },
+    "timestamp": "2025-11-13T07:53:37.005Z"
+  },
+  {
+    "id": "mhx4u41bhxou18gk77r",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_APPROVED_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "loanId": "mhx3c75o26h3c0jkyzi",
+      "newStatus": "approved"
+    },
+    "timestamp": "2025-11-13T07:53:37.007Z"
+  },
+  {
+    "id": "mhx4u41nfkreappashc",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_LOAN_REQUESTS",
+    "old_value": null,
+    "new_value": {
+      "loanRequestCount": 3
+    },
+    "timestamp": "2025-11-13T07:53:37.019Z"
+  },
+  {
+    "id": "mhx4uvkbkwf8ccc7rcs",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T07:54:12.683Z"
+  },
+  {
+    "id": "mhx4uvkq5yrghjj7w3t",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:54:12.698Z"
+  },
+  {
+    "id": "mhx4uvl1591jun6xlue",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:54:12.709Z"
+  },
+  {
+    "id": "mhx4v2fih84f54ymvwe",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:54:21.582Z"
+  },
+  {
+    "id": "mhx4v2frx9b3h9u3bbs",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:54:21.591Z"
+  },
+  {
+    "id": "mhx4vex0dsw1b4xqgp",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:54:37.764Z"
+  },
+  {
+    "id": "mhx4vex91ssh7immtos",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T07:54:37.773Z"
+  },
+  {
+    "id": "mhx5wsj3az3wjdvqpqv",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T08:23:41.679Z"
+  },
+  {
+    "id": "mhx5wsjtzcp85ivirdr",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:23:41.705Z"
+  },
+  {
+    "id": "mhx5wsk34aw2xybrv0r",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:23:41.715Z"
+  },
+  {
+    "id": "mhx5xn49v47ramhvb19",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T08:24:21.321Z"
+  },
+  {
+    "id": "mhx5xn4uqveqzk3ws18",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:24:21.342Z"
+  },
+  {
+    "id": "mhx5xn57qomh59x0dh",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:24:21.355Z"
+  },
+  {
+    "id": "mhx64fhr8kduoz6dxym",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T08:29:38.031Z"
+  },
+  {
+    "id": "mhx64figdrvkvge73zr",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:29:38.056Z"
+  },
+  {
+    "id": "mhx64fir2p9hfm8upn2",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:29:38.067Z"
+  },
+  {
+    "id": "mhx650y0m2ffmi42jaq",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T08:30:05.832Z"
+  },
+  {
+    "id": "mhx650yqgi316ofyovd",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:30:05.858Z"
+  },
+  {
+    "id": "mhx650yzpbe3vp91r8o",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:30:05.867Z"
+  },
+  {
+    "id": "mhx6d5g9pfe7pxuaaei",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T08:36:24.921Z"
+  },
+  {
+    "id": "mhx6d5go6hlp9vrdltm",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:36:24.936Z"
+  },
+  {
+    "id": "mhx6d5h09truam5gg24",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:36:24.948Z"
+  },
+  {
+    "id": "mhx6dr4ckp0xmbl75vh",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-13T08:36:53.004Z"
+  },
+  {
+    "id": "mhx6dr4r5cijsjxvt7p",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:36:53.019Z"
+  },
+  {
+    "id": "mhx6dr53revug8d32ha",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:36:53.031Z"
+  },
+  {
+    "id": "mhx6edok901lzslcigu",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:37:22.244Z"
+  },
+  {
+    "id": "mhx6edow0zq54k4qhlj",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-13T08:37:22.256Z"
+  },
+  {
+    "id": "mhx6eq5pe6h3lqjjgzd",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T08:37:38.413Z"
+  },
+  {
+    "id": "mhx6evyiekxeazio2",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T08:37:45.930Z"
+  },
+  {
+    "id": "mhx6eygn0lxc1zu4hkad",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T08:37:49.175Z"
+  },
+  {
+    "id": "mhx6f4pmj59li651i1",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T08:37:57.274Z"
+  },
+  {
+    "id": "mhx6f4pzxg9y01aq94",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:37:57.287Z"
+  },
+  {
+    "id": "mhx6f4q62ivy5620j3j",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:37:57.294Z"
+  },
+  {
+    "id": "mhx6lur7yo9zg81yio",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:43:10.963Z"
+  },
+  {
+    "id": "mhx6ly63lgv7tkwuuvi",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:43:15.387Z"
+  },
+  {
+    "id": "mhx70pxjxvsq2ai9a",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T08:54:44.551Z"
+  },
+  {
+    "id": "mhx748dacc0e2qrdapa",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T08:57:28.414Z"
+  },
+  {
+    "id": "mhx74m55z3lcwbgvqvn",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "ara@gmail.com",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T08:57:46.265Z"
+  },
+  {
+    "id": "mhx752ec1x036v23zpy",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T08:58:07.332Z"
+  },
+  {
+    "id": "mhx752er8qvd7pkhu4g",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 4
+    },
+    "timestamp": "2025-11-13T08:58:07.347Z"
+  },
+  {
+    "id": "mhx75iv22fgsogqp6ey",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-13T08:58:28.670Z"
+  },
+  {
+    "id": "mhx75ivdfij2gwljd9",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhwz8qmx6wyqfeon78"
+    },
+    "timestamp": "2025-11-13T08:58:28.681Z"
+  },
+  {
+    "id": "mhx75otl0tyzpga73r5i",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhwz8qmx6wyqfeon78"
+    },
+    "timestamp": "2025-11-13T08:58:36.393Z"
+  },
+  {
+    "id": "mhx7mzk5uz8liqwxlhp",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "admin",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:12:03.461Z"
+  },
+  {
+    "id": "mhx7mzmsc61agh54zp8",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:12:03.556Z"
+  },
+  {
+    "id": "mhx7mzp4ddty2oeikoj",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:12:03.640Z"
+  },
+  {
+    "id": "mhx7of5nu64ym2741a9",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "admin",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:13:10.331Z"
+  },
+  {
+    "id": "mhx7of83hi0ii2cjkbk",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:13:10.419Z"
+  },
+  {
+    "id": "mhx7ofai80hcsobfgo8",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:13:10.506Z"
+  },
+  {
+    "id": "mhx7q7wvuet3muwvbrq",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "admin"
+    },
+    "timestamp": "2025-11-13T09:14:34.255Z"
+  },
+  {
+    "id": "mhx7q7zagg14aynffrr",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T09:14:34.342Z"
+  },
+  {
+    "id": "mhx7q81d3lgjkqrlo3z",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-13T09:14:34.417Z"
+  },
+  {
+    "id": "mhx7r2ychxbk3jcrg78",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "admin"
+    },
+    "timestamp": "2025-11-13T09:15:14.484Z"
+  },
+  {
+    "id": "mhx7r31elg8i754w7v",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T09:15:14.594Z"
+  },
+  {
+    "id": "mhx7r31nb6s1oo2w4dp",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 5
+    },
+    "timestamp": "2025-11-13T09:15:14.603Z"
+  },
+  {
+    "id": "mhx7r33zpx39m1g096k",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-13T09:15:14.687Z"
+  },
+  {
+    "id": "mhx7t39xkt1lskt8mi",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "admin"
+    },
+    "timestamp": "2025-11-13T09:16:48.213Z"
+  },
+  {
+    "id": "mhx7t3afkdr6qdowra9",
+    "user_id": "mhwz8qfkm3vggc79ied",
+    "role": "admin",
+    "action": "ADMIN_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 5
+    },
+    "timestamp": "2025-11-13T09:16:48.231Z"
+  },
+  {
+    "id": "mhx7t3cs8sykrao40xa",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T09:16:48.316Z"
+  },
+  {
+    "id": "mhx7t3czzvk3655b35r",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 5
+    },
+    "timestamp": "2025-11-13T09:16:48.323Z"
+  },
+  {
+    "id": "mhx7t3f4atm5meqdufw",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-13T09:16:48.400Z"
+  },
+  {
+    "id": "mhx884fs03j0n7l5f2lx",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-13T09:28:29.560Z"
+  },
+  {
+    "id": "mhx88f0f2sr5qktyroo",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-13T09:28:43.263Z"
+  },
+  {
+    "id": "mhx88f0vo4qmt0mqxp7",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 5
+    },
+    "timestamp": "2025-11-13T09:28:43.279Z"
+  },
+  {
+    "id": "mhx88f13mja53bsxts9",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 5
+    },
+    "timestamp": "2025-11-13T09:28:43.287Z"
+  },
+  {
+    "id": "mhx88vfugljsr58wdij",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-13T09:29:04.554Z"
+  },
+  {
+    "id": "mhx88vga5ncemstm15",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhwz8qmx6wyqfeon78"
+    },
+    "timestamp": "2025-11-13T09:29:04.570Z"
+  },
+  {
+    "id": "mhx88vgmqr602a7ufhb",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhwz8qmx6wyqfeon78"
+    },
+    "timestamp": "2025-11-13T09:29:04.582Z"
+  },
+  {
+    "id": "mhx8912x7zwyl9ri6zr",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhwz8qmx6wyqfeon78"
+    },
+    "timestamp": "2025-11-13T09:29:11.865Z"
+  },
+  {
+    "id": "mhx8913cpxvqqauhu4",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhwz8qmx6wyqfeon78"
+    },
+    "timestamp": "2025-11-13T09:29:11.880Z"
+  },
+  {
+    "id": "mhybdrm0a37ew991add",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-14T03:44:37.896Z"
+  },
+  {
+    "id": "mhybdro9wurkv6447wr",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "CREATE_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "id": "mhybdro49lyj8gsu9fq",
+      "user_id": "mhwz8qmx6wyqfeon78",
+      "amount": 5000,
+      "assessment_id": "test-assessment-id",
+      "status": "pending",
+      "created_at": "2025-11-14T03:44:37.972Z",
+      "updated_at": "2025-11-14T03:44:37.972Z"
+    },
+    "timestamp": "2025-11-14T03:44:37.977Z"
+  },
+  {
+    "id": "mhybdrxkelkk77g73tt",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-14T03:44:38.312Z"
+  },
+  {
+    "id": "mhybdryrr6i3yu0d5bj",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_LOAN_REQUESTS",
+    "old_value": null,
+    "new_value": {
+      "loanRequestCount": 4
+    },
+    "timestamp": "2025-11-14T03:44:38.356Z"
+  },
+  {
+    "id": "mhybdrzdtdc187eeifc",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "banker",
+    "action": "UPDATE_LOAN_STATUS_APPROVED",
+    "old_value": {
+      "status": "pending"
+    },
+    "new_value": {
+      "status": "approved",
+      "updatedBy": "mhwz8qjj5ke6ri0jrl7"
+    },
+    "timestamp": "2025-11-14T03:44:38.377Z"
+  },
+  {
+    "id": "mhybds53on3uuk1vvzj",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_APPROVED_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "loanId": "mhybdro49lyj8gsu9fq",
+      "newStatus": "approved"
+    },
+    "timestamp": "2025-11-14T03:44:38.583Z"
+  },
+  {
+    "id": "mhybdseif0zpe0oipjm",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-14T03:44:38.922Z"
+  },
+  {
+    "id": "mhyber7eu26ktkbcp3h",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-14T03:45:24.026Z"
+  },
+  {
+    "id": "mhyber8vtexa6mcah3j",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "CREATE_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyber8slpkgyh0u0a",
+      "user_id": "mhwz8qmx6wyqfeon78",
+      "amount": 5000,
+      "assessment_id": "test-assessment-id",
+      "status": "pending",
+      "created_at": "2025-11-14T03:45:24.076Z",
+      "updated_at": "2025-11-14T03:45:24.076Z"
+    },
+    "timestamp": "2025-11-14T03:45:24.079Z"
+  },
+  {
+    "id": "mhyberijmqwp05xrkm",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-14T03:45:24.427Z"
+  },
+  {
+    "id": "mhyberjasp8yodda0u",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_LOAN_REQUESTS",
+    "old_value": null,
+    "new_value": {
+      "loanRequestCount": 5
+    },
+    "timestamp": "2025-11-14T03:45:24.454Z"
+  },
+  {
+    "id": "mhyberk0e7owk7f64z",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "banker",
+    "action": "UPDATE_LOAN_STATUS_APPROVED",
+    "old_value": {
+      "status": "pending"
+    },
+    "new_value": {
+      "status": "approved",
+      "updatedBy": "mhwz8qjj5ke6ri0jrl7"
+    },
+    "timestamp": "2025-11-14T03:45:24.480Z"
+  },
+  {
+    "id": "mhybern0ptm5oqdqfk",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_APPROVED_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "loanId": "mhyber8slpkgyh0u0a",
+      "newStatus": "approved"
+    },
+    "timestamp": "2025-11-14T03:45:24.588Z"
+  },
+  {
+    "id": "mhyberwdeowurqm6yvi",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "user"
+    },
+    "timestamp": "2025-11-14T03:45:24.925Z"
+  },
+  {
+    "id": "mhybh7j71pumdh5cnjs",
+    "user_id": null,
+    "role": "anonymous",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user@gmail.com",
+      "reason": "User not found"
+    },
+    "timestamp": "2025-11-14T03:47:18.499Z"
+  },
+  {
+    "id": "mhybhrg6sgwyhfjei6",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "ara",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:47:44.310Z"
+  },
+  {
+    "id": "mhybhwc62j5p0ilmzx7",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "ara",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:47:50.646Z"
+  },
+  {
+    "id": "mhybid7k8win39hgfgf",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "ara"
+    },
+    "timestamp": "2025-11-14T03:48:12.512Z"
+  },
+  {
+    "id": "mhybidbgpjszfaiet6r",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:48:12.652Z"
+  },
+  {
+    "id": "mhybidc3d53tpyr71w4",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:48:12.675Z"
+  },
+  {
+    "id": "mhybitaqqtfp2mbtz5",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:48:33.362Z"
+  },
+  {
+    "id": "mhybitb3hvp9ftslsal",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:48:33.375Z"
+  },
+  {
+    "id": "mhybixkdltzv6mifen",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:48:38.893Z"
+  },
+  {
+    "id": "mhybixkvuqqilibom2a",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:48:38.911Z"
+  },
+  {
+    "id": "mhybm17exbpylnu85cn",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:51:03.578Z"
+  },
+  {
+    "id": "mhyboe4ekgmhvk81uv",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhx2225s5xheayo1xjn"
+    },
+    "timestamp": "2025-11-14T03:52:53.630Z"
+  },
+  {
+    "id": "mhybrpferaxqr1ajph8",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "ara@gmail.com",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:55:28.250Z"
+  },
+  {
+    "id": "mhybrwas9wc5hkavn8n",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "ara@gmail.com",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:55:37.156Z"
+  },
+  {
+    "id": "mhybs5wdfqmefjs3p5o",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:55:49.597Z"
+  },
+  {
+    "id": "mhybsdo8mghi4nzrof",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:55:59.672Z"
+  },
+  {
+    "id": "mhybsg4lww54pqg0oqr",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:56:02.853Z"
+  },
+  {
+    "id": "mhybskeqhaodleu1114",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "role": "user",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "user",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T03:56:08.402Z"
+  },
+  {
+    "id": "mhybt2ona6tk4nujkz",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "CREATE_USER",
+    "old_value": null,
+    "new_value": {
+      "id": "mhybt2okm01wktglbw",
+      "username": "enu",
+      "email": "enu@gmail.com",
+      "name": "enu",
+      "phone": "",
+      "address": "",
+      "occupation": "",
+      "role": "user",
+      "created_at": "2025-11-14T03:56:32.084Z",
+      "creditScore": null,
+      "assessed": false
+    },
+    "timestamp": "2025-11-14T03:56:32.087Z"
+  },
+  {
+    "id": "mhybt2p4gijcdm6eys4",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "USER_SIGNUP",
+    "old_value": null,
+    "new_value": {
+      "username": "enu",
+      "email": "enu@gmail.com"
+    },
+    "timestamp": "2025-11-14T03:56:32.104Z"
+  },
+  {
+    "id": "mhybt2q5equhtkggu1l",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhybt2okm01wktglbw"
+    },
+    "timestamp": "2025-11-14T03:56:32.141Z"
+  },
+  {
+    "id": "mhybt2qldlnvga4crtn",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhybt2okm01wktglbw"
+    },
+    "timestamp": "2025-11-14T03:56:32.157Z"
+  },
+  {
+    "id": "mhybzxsqpnwvbg4rdw",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "enu"
+    },
+    "timestamp": "2025-11-14T04:01:52.346Z"
+  },
+  {
+    "id": "mhybzxtg1w6dzafl4qq",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhybt2okm01wktglbw"
+    },
+    "timestamp": "2025-11-14T04:01:52.372Z"
+  },
+  {
+    "id": "mhybzxtxka1wrufpb0a",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhybt2okm01wktglbw"
+    },
+    "timestamp": "2025-11-14T04:01:52.389Z"
+  },
+  {
+    "id": "mhyc0i2m8bdx129m3bi",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc0i2klvaqccs113i",
+      "user_id": "mhybt2okm01wktglbw",
+      "salary_receipt": "/uploads/document-1763092938616-661649251.jpg",
+      "uploadedAt": "2025-11-14T04:02:18.620Z"
+    },
+    "timestamp": "2025-11-14T04:02:18.622Z"
+  },
+  {
+    "id": "mhyc0i2n4iuscm9fhyh",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhyc0i2klvaqccs113i",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-14T04:02:18.623Z"
+  },
+  {
+    "id": "mhyc0jbo00ez1u2ol9148",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc0jbngm1csblv14h",
+      "user_id": "mhybt2okm01wktglbw",
+      "salary_receipt": "/uploads/document-1763092940239-254864139.jpg",
+      "uploadedAt": "2025-11-14T04:02:20.243Z"
+    },
+    "timestamp": "2025-11-14T04:02:20.244Z"
+  },
+  {
+    "id": "mhyc0jbr5xvyimxtoaq",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhyc0jbngm1csblv14h",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-14T04:02:20.247Z"
+  },
+  {
+    "id": "mhyc0jz2n1ghetu3sfd",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc0jz1digbbpu6oi6",
+      "user_id": "mhybt2okm01wktglbw",
+      "salary_receipt": "/uploads/document-1763092941081-103778027.jpg",
+      "uploadedAt": "2025-11-14T04:02:21.085Z"
+    },
+    "timestamp": "2025-11-14T04:02:21.086Z"
+  },
+  {
+    "id": "mhyc0jz3rwr9vxuhdas",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhyc0jz1digbbpu6oi6",
+      "documentType": "salary_receipt"
+    },
+    "timestamp": "2025-11-14T04:02:21.087Z"
+  },
+  {
+    "id": "mhyc0smuu6rumlkef0j",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc0smt4a81i6deagf",
+      "user_id": "mhybt2okm01wktglbw",
+      "bank_statement": "/uploads/document-1763092952307-517562256.jpg",
+      "uploadedAt": "2025-11-14T04:02:32.309Z"
+    },
+    "timestamp": "2025-11-14T04:02:32.310Z"
+  },
+  {
+    "id": "mhyc0smv7adwj7f1ffg",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhyc0smt4a81i6deagf",
+      "documentType": "bank_statement"
+    },
+    "timestamp": "2025-11-14T04:02:32.311Z"
+  },
+  {
+    "id": "mhyc12jxt6ymhms4gab",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc12jwqt4i2uewco",
+      "user_id": "mhybt2okm01wktglbw",
+      "aadhar_card": "/uploads/document-1763092965158-161358809.jpg",
+      "uploadedAt": "2025-11-14T04:02:45.164Z"
+    },
+    "timestamp": "2025-11-14T04:02:45.165Z"
+  },
+  {
+    "id": "mhyc12jzh6q07no8rur",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "UPLOAD_DOCUMENT",
+    "old_value": null,
+    "new_value": {
+      "documentId": "mhyc12jwqt4i2uewco",
+      "documentType": "aadhar_card"
+    },
+    "timestamp": "2025-11-14T04:02:45.167Z"
+  },
+  {
+    "id": "mhyc143q4l9y98f3ykv",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc143mlp9o0fro8w",
+      "user_id": "mhybt2okm01wktglbw",
+      "score": 97,
+      "risk_level": "very safe",
+      "reasons": [
+        {
+          "factor": "income_stability",
+          "points": 20,
+          "explanation": "Steady income indicates financial stability"
+        },
+        {
+          "factor": "spending_patterns",
+          "points": 15,
+          "explanation": "Responsible spending habits observed"
+        },
+        {
+          "factor": "repayment_history",
+          "points": 25,
+          "explanation": "No late payments or defaults found"
+        },
+        {
+          "factor": "account_activity",
+          "points": 10,
+          "explanation": "Regular banking activity shows engagement"
+        },
+        {
+          "factor": "document_authenticity",
+          "points": 20,
+          "explanation": "Documents verified as authentic"
+        }
+      ],
+      "created_at": "2025-11-14T04:02:47.170Z"
+    },
+    "timestamp": "2025-11-14T04:02:47.174Z"
+  },
+  {
+    "id": "mhyc143s7p0itv6otm4",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "CREATE_ASSESSMENT",
+    "old_value": null,
+    "new_value": {
+      "assessmentId": "mhyc143mlp9o0fro8w",
+      "score": 97,
+      "decision": "APPROVE",
+      "loanAmount": 10000
+    },
+    "timestamp": "2025-11-14T04:02:47.176Z"
+  },
+  {
+    "id": "mhyc1b08nbqtbzj04oq",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "CREATE_LOAN_REQUEST",
+    "old_value": null,
+    "new_value": {
+      "id": "mhyc1b06u5j5i4b8z98",
+      "user_id": "mhybt2okm01wktglbw",
+      "amount": 10000,
+      "assessment_id": "mhyc143mlp9o0fro8w",
+      "status": "pending",
+      "created_at": "2025-11-14T04:02:56.118Z",
+      "updated_at": "2025-11-14T04:02:56.118Z"
+    },
+    "timestamp": "2025-11-14T04:02:56.120Z"
+  },
+  {
+    "id": "mhyc1p5u87sa7rydheh",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhybt2okm01wktglbw"
+    },
+    "timestamp": "2025-11-14T04:03:14.466Z"
+  },
+  {
+    "id": "mhyc1p62gsp8agdthji",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "VIEW_PROFILE",
+    "old_value": null,
+    "new_value": {
+      "profileUserId": "mhybt2okm01wktglbw"
+    },
+    "timestamp": "2025-11-14T04:03:14.474Z"
+  },
+  {
+    "id": "mhyc24tmoiy8m1nmlrb",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T04:03:34.762Z"
+  },
+  {
+    "id": "mhyc87rbt933r3x25nb",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-14T04:08:18.503Z"
+  },
+  {
+    "id": "mhyc87rxf8mwyo1xevi",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:08:18.525Z"
+  },
+  {
+    "id": "mhyc87sbir0s55aup2h",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:08:18.539Z"
+  },
+  {
+    "id": "mhyc8wb1fzxzzruvvs6",
+    "user_id": "mhx7love57e4ar681ws",
+    "role": "admin",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "admin"
+    },
+    "timestamp": "2025-11-14T04:08:50.317Z"
+  },
+  {
+    "id": "mhyc8wbminxq2reqnsp",
+    "user_id": "mhx7love57e4ar681ws",
+    "role": "admin",
+    "action": "ADMIN_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:08:50.338Z"
+  },
+  {
+    "id": "mhyc8wc1ajzfkyz85hp",
+    "user_id": "mhx7love57e4ar681ws",
+    "role": "admin",
+    "action": "ADMIN_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:08:50.353Z"
+  },
+  {
+    "id": "mhyc9colk16hmcv9vi",
+    "user_id": "mhx7love57e4ar681ws",
+    "role": "admin",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "admin"
+    },
+    "timestamp": "2025-11-14T04:09:11.541Z"
+  },
+  {
+    "id": "mhyc9cp8263v4nzdrto",
+    "user_id": "mhx7love57e4ar681ws",
+    "role": "admin",
+    "action": "ADMIN_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:09:11.564Z"
+  },
+  {
+    "id": "mhyc9cpkv3uqle2k79p",
+    "user_id": "mhx7love57e4ar681ws",
+    "role": "admin",
+    "action": "ADMIN_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:09:11.576Z"
+  },
+  {
+    "id": "mhychpnqimelz4ukugk",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-14T04:15:41.606Z"
+  },
+  {
+    "id": "mhychpobs5yk0p28r6",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:15:41.627Z"
+  },
+  {
+    "id": "mhychpotjq0nejeqg8",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:15:41.645Z"
+  },
+  {
+    "id": "mhychwxboqqwtcoa2o",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_LOAN_REQUESTS",
+    "old_value": null,
+    "new_value": {
+      "loanRequestCount": 6
+    },
+    "timestamp": "2025-11-14T04:15:51.023Z"
+  },
+  {
+    "id": "mhycnwkz9eocebvbv3u",
+    "user_id": "mhybt2okm01wktglbw",
+    "role": "user",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "enu"
+    },
+    "timestamp": "2025-11-14T04:20:30.515Z"
+  },
+  {
+    "id": "mhycwfyor2slplpfmzb",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-14T04:27:08.880Z"
+  },
+  {
+    "id": "mhycwfz87ur66xyrpxm",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:27:08.900Z"
+  },
+  {
+    "id": "mhycwfzjdsv6eecv2u",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:27:08.911Z"
+  },
+  {
+    "id": "mhycwty3nqfny74t2",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:27:27.003Z"
+  },
+  {
+    "id": "mhydaudeoqdelmu8u8r",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "FAILED_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "identifier": "banker@justifi.com",
+      "reason": "Invalid password"
+    },
+    "timestamp": "2025-11-14T04:38:20.738Z"
+  },
+  {
+    "id": "mhydaziyj0ut2yehxws",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "SUCCESSFUL_LOGIN",
+    "old_value": null,
+    "new_value": {
+      "username": "banker"
+    },
+    "timestamp": "2025-11-14T04:38:27.418Z"
+  },
+  {
+    "id": "mhydazjnq3smfs92dua",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:38:27.443Z"
+  },
+  {
+    "id": "mhydazk38bedufkoe76",
+    "user_id": "mhwz8qjj5ke6ri0jrl7",
+    "role": "banker",
+    "action": "BANKER_VIEW_ALL_USERS",
+    "old_value": null,
+    "new_value": {
+      "userCount": 6
+    },
+    "timestamp": "2025-11-14T04:38:27.459Z"
+  }
+]

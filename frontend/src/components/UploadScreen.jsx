@@ -6,20 +6,24 @@ import { getCurrentUser } from '../services/authService';
 
 const API_BASE_URL = '/api'; // Use relative path to match backend
 
-const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
+const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile, userId }) => {
   const [salaryReceipt, setSalaryReceipt] = useState(null);
   const [bankStatement, setBankStatement] = useState(null);
+  const [idDocument, setIdDocument] = useState(null);
+  const [idDocumentType, setIdDocumentType] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [demoUsers, setDemoUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState('');
   const [uploadStatus, setUploadStatus] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState({
     salaryReceipt: false,
-    bankStatement: false
+    bankStatement: false,
+    idDocument: false
   });
   const [uploadedFileIds, setUploadedFileIds] = useState({
     salaryReceipt: null,
-    bankStatement: null
+    bankStatement: null,
+    idDocument: null
   });
   const [creditScoreResult, setCreditScoreResult] = useState(null);
 
@@ -58,9 +62,25 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     setUploadedFileIds(prev => ({ ...prev, bankStatement: null }));
   };
 
+  const handleIdDocumentChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setIdDocument(selectedFile);
+    setUploadStatus('');
+    setCreditScoreResult(null); // Reset analysis when new file is selected
+    // Reset upload status when new file is selected
+    setUploadedFiles(prev => ({ ...prev, idDocument: false }));
+    setUploadedFileIds(prev => ({ ...prev, idDocument: null }));
+  };
+
   const handleSalaryReceiptUpload = async () => {
     if (!salaryReceipt) {
       setUploadStatus(t('please_select_file', language));
+      return;
+    }
+
+    // Check if user is logged in
+    if (!userId) {
+      setUploadStatus(t('user_not_authenticated', language));
       return;
     }
 
@@ -72,11 +92,8 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
       formData.append('document', salaryReceipt);
       formData.append('type', 'salary_receipt');
       
-      // Get current user ID to associate with the document
-      const currentUser = getCurrentUser();
-      if (currentUser) {
-        formData.append('userId', currentUser.id);
-      }
+      // Use the passed userId
+      formData.append('userId', userId);
 
       const response = await fetch(`${API_BASE_URL}/assess/upload`, {
         method: 'POST',
@@ -106,6 +123,12 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
       return;
     }
 
+    // Check if user is logged in
+    if (!userId) {
+      setUploadStatus(t('user_not_authenticated', language));
+      return;
+    }
+
     setIsUploading(true);
     setUploadStatus('');
 
@@ -114,11 +137,8 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
       formData.append('document', bankStatement);
       formData.append('type', 'bank_statement');
       
-      // Get current user ID to associate with the document
-      const currentUser = getCurrentUser();
-      if (currentUser) {
-        formData.append('userId', currentUser.id);
-      }
+      // Use the passed userId
+      formData.append('userId', userId);
 
       const response = await fetch(`${API_BASE_URL}/assess/upload`, {
         method: 'POST',
@@ -142,10 +162,55 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
     }
   };
 
+  const handleIdDocumentUpload = async () => {
+    if (!idDocument) {
+      setUploadStatus(t('please_select_file', language));
+      return;
+    }
+
+    // Check if user is logged in
+    if (!userId) {
+      setUploadStatus(t('user_not_authenticated', language));
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadStatus('');
+
+    try {
+      const formData = new FormData();
+      formData.append('document', idDocument);
+      formData.append('type', idDocumentType || 'id_document');
+      
+      // Use the passed userId
+      formData.append('userId', userId);
+
+      const response = await fetch(`${API_BASE_URL}/assess/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || t('error_processing_request', language));
+      }
+
+      setUploadedFiles(prev => ({ ...prev, idDocument: true }));
+      setUploadedFileIds(prev => ({ ...prev, idDocument: result.document.id }));
+      setUploadStatus(t('id_document_uploaded_successfully', language));
+    } catch (error) {
+      console.error('Error uploading ID document:', error);
+      setUploadStatus(error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleAssessment = async () => {
-    // Check if both documents are uploaded
-    if (!uploadedFiles.salaryReceipt || !uploadedFiles.bankStatement) {
-      setUploadStatus(t('please_upload_both_documents', language));
+    // Check if at least one document is uploaded
+    if (!uploadedFiles.salaryReceipt && !uploadedFiles.bankStatement && !uploadedFiles.idDocument) {
+      setUploadStatus(t('please_upload_at_least_one_document', language));
       return;
     }
 
@@ -193,132 +258,145 @@ const UploadScreen = ({ onAssessmentComplete, language, onBackToProfile }) => {
   };
 
   return (
-    <div className="upload-screen">
-      <div className="header">
-        <button className="back-button" onClick={onBackToProfile}>←</button>
-        <h1>{t('upload_documents', language)}</h1>
-      </div>
-      
-      {/* Show upload options only if analysis is not yet shown */}
-      {!creditScoreResult && (
-        <>
-          <div className="upload-options">
-            {/* Salary Receipt Upload */}
-            <div className="upload-option">
-              <h2>{t('upload_salary_receipt', language)}</h2>
-              <p>{t('upload_salary_receipt_description', language)}</p>
-              
-              <label className="file-input-label">
-                {salaryReceipt ? salaryReceipt.name : t('choose_salary_receipt', language)}
-                <input 
-                  type="file" 
-                  onChange={handleSalaryReceiptChange} 
-                  accept=".jpg,.jpeg,.png,.pdf"
-                />
+    <div className="app-container">
+      <div className="upload-screen">
+        <div className="card">
+        <div className="header">
+          <button className="back-button btn btn-secondary" onClick={onBackToProfile}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m12 19-7-7 7-7"/>
+              <path d="M19 12H5"/>
+            </svg>
+          </button>
+          <h1 className="page-title">{t('upload_documents', language)}</h1>
+        </div>
+        
+        <div className="upload-content">
+          <div className="upload-section">
+            <h2 className="section-title">{t('upload_salary_receipt', language)}</h2>
+            <div className="file-upload-area">
+              <input 
+                type="file" 
+                id="salary-receipt" 
+                onChange={handleSalaryReceiptChange} 
+                accept=".pdf,.jpg,.jpeg,.png"
+                className="file-input"
+              />
+              <label htmlFor="salary-receipt" className="file-label btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" x2="12" y1="3" y2="15"/>
+                </svg>
+                {t('choose_file', language)}
               </label>
-              
-              <button 
-                className="secondary-button" 
-                onClick={handleSalaryReceiptUpload}
-                disabled={isUploading || !salaryReceipt || uploadedFiles.salaryReceipt}
-              >
-                {isUploading ? t('uploading', language) : 
-                 uploadedFiles.salaryReceipt ? t('salary_receipt_uploaded_successfully', language) : 
-                 t('upload_salary_receipt_button', language)}
-              </button>
-              
-              {uploadedFiles.salaryReceipt && (
-                <div className="confirmation-message">
-                  ✓ {t('salary_receipt_uploaded_successfully', language)}
-                </div>
+              {salaryReceipt && (
+                <p className="file-name">{salaryReceipt.name}</p>
               )}
-            </div>
-
-            {/* Bank Statement Upload */}
-            <div className="upload-option">
-              <h2>{t('upload_bank_statement', language)}</h2>
-              <p>{t('upload_bank_statement_description', language)}</p>
-              
-              <label className="file-input-label">
-                {bankStatement ? bankStatement.name : t('choose_bank_statement', language)}
-                <input 
-                  type="file" 
-                  onChange={handleBankStatementChange} 
-                  accept=".jpg,.jpeg,.png,.pdf"
-                />
-              </label>
-              
               <button 
-                className="secondary-button" 
-                onClick={handleBankStatementUpload}
-                disabled={isUploading || !bankStatement || uploadedFiles.bankStatement}
+                onClick={handleSalaryReceiptUpload} 
+                className="upload-button btn btn-primary"
+                disabled={!salaryReceipt || isUploading}
               >
-                {isUploading ? t('uploading', language) : 
-                 uploadedFiles.bankStatement ? t('bank_statement_uploaded_successfully', language) : 
-                 t('upload_bank_statement_button', language)}
+                {isUploading && uploadedFiles.salaryReceipt === false ? t('uploading', language) : t('upload', language)}
               </button>
-              
-              {uploadedFiles.bankStatement && (
-                <div className="confirmation-message">
-                  ✓ {t('bank_statement_uploaded_successfully', language)}
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Demo Data Option */}
-          <div className="demo-section">
-            <p>{t('or_try_demo', language)}</p>
-            <div className="demo-user-selection">
-              <h3>{t('select_demo_user', language)}</h3>
-              <select value={selectedUser} onChange={handleUserChange}>
-                <option value="">{t('please_select_demo_user', language)}</option>
-                {demoUsers.map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.name} ({user.riskLevel})
-                  </option>
-                ))}
+          <div className="upload-section">
+            <h2 className="section-title">{t('upload_bank_statement', language)}</h2>
+            <div className="file-upload-area">
+              <input 
+                type="file" 
+                id="bank-statement" 
+                onChange={handleBankStatementChange} 
+                accept=".pdf,.jpg,.jpeg,.png"
+                className="file-input"
+              />
+              <label htmlFor="bank-statement" className="file-label btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" x2="12" y1="3" y2="15"/>
+                </svg>
+                {t('choose_file', language)}
+              </label>
+              {bankStatement && (
+                <p className="file-name">{bankStatement.name}</p>
+              )}
+              <button 
+                onClick={handleBankStatementUpload} 
+                className="upload-button btn btn-primary"
+                disabled={!bankStatement || isUploading}
+              >
+                {isUploading && uploadedFiles.bankStatement === false ? t('uploading', language) : t('upload', language)}
+              </button>
+            </div>
+          </div>
+
+          <div className="upload-section">
+            <h2 className="section-title">{t('upload_either_aadhar_or_pan', language)}</h2>
+            <div className="file-upload-area">
+              <select 
+                value={idDocumentType}
+                onChange={(e) => setIdDocumentType(e.target.value)}
+                className="document-type-select"
+              >
+                <option value="">{t('select_document_type', language)}</option>
+                <option value="aadhar_card">{t('aadhar_card', language)}</option>
+                <option value="pan_card">{t('pan_card', language)}</option>
               </select>
+              <input 
+                type="file" 
+                id="id-document" 
+                onChange={handleIdDocumentChange} 
+                accept=".pdf,.jpg,.jpeg,.png"
+                className="file-input"
+              />
+              <label htmlFor="id-document" className="file-label btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" x2="12" y1="3" y2="15"/>
+                </svg>
+                {t('choose_file', language)}
+              </label>
+              {idDocument && (
+                <p className="file-name">{idDocument.name}</p>
+              )}
+              <button 
+                onClick={handleIdDocumentUpload} 
+                className="upload-button btn btn-primary"
+                disabled={!idDocument || !idDocumentType || isUploading}
+              >
+                {isUploading && uploadedFiles.idDocument === false ? t('uploading', language) : t('upload', language)}
+              </button>
             </div>
           </div>
 
-          {/* Status Messages */}
           {uploadStatus && (
-            <div className={`upload-status ${uploadStatus.includes('successfully') ? 'success' : 'error'}`}>
+            <div className={`status-message ${uploadStatus.includes('success') ? 'success' : 'error'}`}>
               {uploadStatus}
             </div>
           )}
 
-          {/* Action Button */}
           <button 
-            className="primary-button" 
-            onClick={handleAssessment}
-            disabled={isUploading || !uploadedFiles.salaryReceipt || !uploadedFiles.bankStatement}
+            onClick={handleAssessment} 
+            className="assess-button btn btn-primary"
+            disabled={!uploadedFiles.salaryReceipt && !uploadedFiles.bankStatement && !uploadedFiles.idDocument || isUploading}
           >
-            {isUploading ? t('processing', language) : t('calculate_my_score', language)}
+            {isUploading ? t('analyzing', language) : t('perform_assessment', language)}
           </button>
+        </div>
 
-          {/* Privacy Note */}
-          <div className="privacy-note">
-            {t('no_pan_aadhaar_required', language)}
+        {creditScoreResult && (
+          <div className="analysis-section">
+            <h2 className="section-title">{t('credit_analysis', language)}</h2>
+            <CreditScoreAnalysis result={creditScoreResult} language={language} />
           </div>
-        </>
-      )}
-
-      {/* Show credit score analysis if result is available */}
-      {creditScoreResult && (
-        <CreditScoreAnalysis 
-          result={creditScoreResult} 
-          onRestart={() => {
-            setCreditScoreResult(null);
-            setUploadedFiles({ salaryReceipt: false, bankStatement: false });
-            setUploadedFileIds({ salaryReceipt: null, bankStatement: null });
-            setSalaryReceipt(null);
-            setBankStatement(null);
-          }}
-          language={language}
-        />
-      )}
+        )}
+        </div>
+      </div>
     </div>
   );
 };

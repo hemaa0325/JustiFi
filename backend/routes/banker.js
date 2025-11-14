@@ -1,315 +1,314 @@
 const express = require('express');
-const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { getAllUsers, getUserById, getDocumentsByUserId } = require('../db/fileDatabase');
+const { 
+  getAllUsers, 
+  getDocumentsByUserId, 
+  getTransactionsByUserId,
+  createAssessment,
+  logActivity,
+  getAllLoanRequests,
+  updateLoanRequestStatus,
+  getUserById
+} = require('../db/fileDatabase');
 
+const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'trusttap_secret_key';
 
-// Get all users (for banker dashboard)
+// Get all users for banker review
 router.get('/users', (req, res) => {
-  // Verify JWT token
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res.status(401).json({ error: 'Authorization token required' });
   }
   
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
     
-    // Check if user is a banker or admin
     if (decoded.role !== 'banker' && decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
+      return res.status(403).json({ error: 'Not authorized' });
     }
     
-    // Get all users
-    const users = getAllUsers();
-    
-    // Filter out bankers and admins, only show regular users
-    const regularUsers = users.filter(user => user.role === 'user');
-    
-    // Add credit scores to users (mock data for now)
-    const usersWithScores = regularUsers.map(user => {
-      // Assign specific scores for default users
-      let scoreData;
+    try {
+      const users = await getAllUsers();
       
-      if (user.id === '1') {
-        // Alice Johnson - Score: 60
-        scoreData = {
-          score: 60,
-          decision: 'APPROVE_WITH_CAP',
-          loanAmount: 5000,
-          message: 'Approved with a capped amount based on your financial history.'
-        };
-      } else if (user.id === '2') {
-        // Bob Smith - Score: 20
-        scoreData = {
-          score: 20,
-          decision: 'REJECT',  // Changed from REVIEW to REJECT
-          loanAmount: 0,
-          message: 'Your application has been rejected based on your financial history.'
-        };
-      } else {
-        // For other users, assign default scores
-        scoreData = {
-          score: 50,
-          decision: 'REVIEW',
-          loanAmount: 2500,
-          message: 'Your application requires further review.'
-        };
-      }
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'BANKER_VIEW_ALL_USERS', null, { userCount: users.length });
       
-      return {
-        ...user,
-        creditScore: scoreData.score,
-        creditDecision: scoreData.decision
-      };
-    });
-    
-    res.json({
-      users: usersWithScores
-    });
+      res.json(users);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Error fetching users' });
+    }
   });
 });
 
-// Get user details with credit score
-router.get('/users/:userId', (req, res) => {
-  // Verify JWT token
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token required' });
-  }
-  
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
-    }
-    
-    // Check if user is a banker or admin
-    if (decoded.role !== 'banker' && decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
-    }
-    
-    const { userId } = req.params;
-    
-    // Get user info
-    const user = getUserById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    // Get credit score (mock data for now)
-    let scoreData;
-    
-    if (userId === '1') {
-      // Alice Johnson - Score: 60
-      scoreData = {
-        score: 60,
-        decision: 'APPROVE_WITH_CAP',
-        loanAmount: 5000,
-        message: 'Approved with a capped amount based on your financial history.',
-        reasons: [
-          '+25 points for steady income pattern',
-          '+10 points for moderate transaction volume (5-9 receipts)',
-          '-5 points for low refund percentage (<15%)',
-          '+20 points for consistent spending pattern'
-        ]
-      };
-    } else if (userId === '2') {
-      // Bob Smith - Score: 20
-      scoreData = {
-        score: 20,
-        decision: 'REJECT',  // Changed from REVIEW to REJECT
-        loanAmount: 0,
-        message: 'Your application has been rejected based on your financial history.',
-        reasons: [
-          '+0 points for irregular income pattern',
-          '+0 points for low transaction volume (<5 receipts)',
-          '-20 points for high refund percentage (>30%)',
-          '+0 points for inconsistent spending pattern'
-        ]
-      };
-    } else {
-      // For other users, use default data
-      scoreData = {
-        score: 50,
-        decision: 'REVIEW',
-        loanAmount: 2500,
-        message: 'Your application requires further review.',
-        reasons: [
-          '+10 points for basic profile completion',
-          '+5 points for account age',
-          '+15 points for transaction history',
-          '-10 points for limited credit history'
-        ]
-      };
-    }
-    
-    res.json({
-      user: {
-        ...user,
-        creditScore: scoreData.score,
-        creditDecision: scoreData.decision,
-        loanAmount: scoreData.loanAmount,
-        message: scoreData.message,
-        reasons: scoreData.reasons
-      }
-    });
-  });
-});
-
-// Get user documents
+// Get user documents for review
 router.get('/documents/:userId', (req, res) => {
-  // Verify JWT token
   const token = req.headers.authorization?.split(' ')[1];
+  const { userId } = req.params;
+  
   if (!token) {
     return res.status(401).json({ error: 'Authorization token required' });
   }
   
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
     
-    // Check if user is a banker or admin
     if (decoded.role !== 'banker' && decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
+      return res.status(403).json({ error: 'Not authorized' });
     }
     
-    const { userId } = req.params;
-    
-    // Get user info
-    const user = getUserById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    try {
+      const documents = await getDocumentsByUserId(userId);
+      
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'BANKER_VIEW_USER_DOCUMENTS', null, { 
+        targetUserId: userId, 
+        documentCount: documents.length 
+      });
+      
+      res.json(documents);
+    } catch (error) {
+      console.error('Error fetching documents:', error);
+      res.status(500).json({ error: 'Error fetching documents' });
     }
-    
-    // Get actual documents from database
-    const documents = getDocumentsByUserId(userId);
-    
-    // Format documents for frontend
-    const formattedDocuments = documents.map(doc => ({
-      id: doc.id,
-      name: doc.name,
-      type: doc.type,
-      size: formatFileSize(doc.size),
-      uploadDate: new Date(doc.uploadedAt).toLocaleDateString()
-    }));
-    
-    res.json({
-      documents: formattedDocuments
-    });
   });
 });
 
-// Helper function to format file size
-function formatFileSize(bytes) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-// Download document
-router.get('/documents/download/:docId', (req, res) => {
-  // Verify JWT token
+// Manual assessment by banker
+router.post('/assess/:userId', (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
+  const { userId } = req.params;
+  const { score, decision, loanAmount, safetyLevel, explanation } = req.body;
+  
   if (!token) {
     return res.status(401).json({ error: 'Authorization token required' });
   }
   
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
     
-    // Check if user is a banker or admin
     if (decoded.role !== 'banker' && decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
+      return res.status(403).json({ error: 'Not authorized' });
     }
     
-    const { docId } = req.params;
+    try {
+      // Create assessment record
+      const assessment = await createAssessment({
+        userId,
+        score,
+        decision,
+        loanAmount,
+        safetyLevel,
+        explanation
+      });
+      
+      // Log the manual assessment
+      await logActivity(decoded.userId, decoded.role, 'BANKER_CREATE_ASSESSMENT', null, { 
+        targetUserId: userId, 
+        assessmentId: assessment.id, 
+        score: score, 
+        decision: decision,
+        loanAmount: loanAmount,
+        safetyLevel: safetyLevel 
+      });
+      
+      res.json({
+        message: 'Manual assessment completed successfully',
+        assessment
+      });
+    } catch (error) {
+      console.error('Error creating assessment:', error);
+      res.status(500).json({ error: 'Error creating assessment' });
+    }
+  });
+});
+
+// Update document status
+router.put('/documents/:documentId/status', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { documentId } = req.params;
+  const { status } = req.body;
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization token required' });
+  }
+  
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
     
-    // In a real implementation, we would fetch the document from storage
-    // For this demo, we'll send a mock response
+    if (decoded.role !== 'banker' && decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
     
-    // Create a mock PDF file in memory
-    const mockPdfContent = `%PDF-1.4
-1 0 obj
-<<
-/Type /Catalog
-/Pages 2 0 R
->>
-endobj
-
-2 0 obj
-<<
-/Type /Pages
-/Kids [3 0 R]
-/Count 1
->>
-endobj
-
-3 0 obj
-<<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Contents 4 0 R
-/Resources <<
-/Font <<
-/F1 5 0 R
->>
->>
->>
-endobj
-
-4 0 obj
-<<
-/Length 44
->>
-stream
-BT
-/F1 12 Tf
-72 720 Td
-(Document Content Placeholder) Tj
-ET
-endstream
-endobj
-
-5 0 obj
-<<
-/Type /Font
-/Subtype /Type1
-/BaseFont /Helvetica
->>
-endobj
-
-xref
-0 6
-0000000000 65535 f 
-0000000010 00000 n 
-0000000053 00000 n 
-0000000115 00000 n 
-0000000285 00000 n 
-0000000371 00000 n 
-trailer
-<<
-/Size 6
-/Root 1 0 R
->>
-startxref
-478
-%%EOF`;
-
-    // Set headers for file download
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="document-${docId}.pdf"`);
+    // In a real implementation, we would update the document status in the database
+    // For now, we'll just log the action
     
-    // Send mock PDF content
-    res.send(mockPdfContent);
+    try {
+      // Log the document status update
+      await logActivity(decoded.userId, decoded.role, 'BANKER_UPDATE_DOCUMENT_STATUS', null, { 
+        documentId: documentId, 
+        newStatus: status 
+      });
+      
+      res.json({
+        message: `Document status updated to ${status}`
+      });
+    } catch (error) {
+      console.error('Error updating document status:', error);
+      res.status(500).json({ error: 'Error updating document status' });
+    }
+  });
+});
+
+// Get user details for assessment (documents and transactions)
+router.get('/user/:userId', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { userId } = req.params;
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization token required' });
+  }
+  
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+    
+    if (decoded.role !== 'banker' && decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+    
+    try {
+      // Get user profile from auth route
+      const userProfileResponse = await fetch(`http://localhost:${process.env.PORT || 52095}/api/auth/profile/${userId}`, {
+        headers: {
+          'Authorization': req.headers.authorization
+        }
+      });
+      
+      if (!userProfileResponse.ok) {
+        const errorData = await userProfileResponse.json();
+        return res.status(userProfileResponse.status).json({ error: errorData.error || 'Error fetching user profile' });
+      }
+      
+      const userProfile = await userProfileResponse.json();
+      
+      // Get user documents
+      const documents = await getDocumentsByUserId(userId);
+      
+      // Get user transactions
+      const transactions = await getTransactionsByUserId(userId);
+      
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'BANKER_VIEW_USER_DETAILS', null, { 
+        targetUserId: userId 
+      });
+      
+      res.json({
+        user: userProfile.user,
+        documents,
+        transactions
+      });
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      res.status(500).json({ error: 'Error fetching user details' });
+    }
+  });
+});
+
+// New endpoint to get all loan requests
+router.get('/loan-requests', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization token required' });
+  }
+  
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+    
+    if (decoded.role !== 'banker' && decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+    
+    try {
+      const loanRequests = await getAllLoanRequests();
+      
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'BANKER_VIEW_LOAN_REQUESTS', null, { loanRequestCount: loanRequests.length });
+      
+      res.json(loanRequests);
+    } catch (error) {
+      console.error('Error fetching loan requests:', error);
+      res.status(500).json({ error: 'Error fetching loan requests' });
+    }
+  });
+});
+
+// New endpoint to approve/reject loan requests
+router.put('/loan-requests/:loanId/status', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { loanId } = req.params;
+  const { status } = req.body; // pending, approved, rejected, disbursed
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization token required' });
+  }
+  
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+    
+    if (decoded.role !== 'banker' && decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+    
+    // Validate status
+    const validStatuses = ['pending', 'approved', 'rejected', 'disbursed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+    
+    try {
+      const updatedLoanRequest = await updateLoanRequestStatus(loanId, status, decoded.userId, decoded.role);
+      
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, `BANKER_${status.toUpperCase()}_LOAN_REQUEST`, null, { 
+        loanId: loanId, 
+        newStatus: status 
+      });
+      
+      // Send notification to user when loan is approved
+      if (status === 'approved') {
+        // Get user details for notification
+        const user = await getUserById(updatedLoanRequest.user_id);
+        if (user) {
+          // In a real implementation, we would send a real notification
+          // For now, we'll just log that a notification should be sent
+          console.log(`Notification should be sent to user ${user.username} that their loan has been approved`);
+        }
+      }
+      
+      res.json({
+        message: `Loan request ${status} successfully`,
+        loanRequest: updatedLoanRequest
+      });
+    } catch (error) {
+      console.error('Error updating loan request status:', error);
+      res.status(500).json({ error: error.message || 'Error updating loan request status' });
+    }
   });
 });
 

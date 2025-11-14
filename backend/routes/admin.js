@@ -1,176 +1,138 @@
 const express = require('express');
-const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { getAllUsers, getUserById, updateUserProfile, deleteUser } = require('../db/fileDatabase');
+const { 
+  getAllUsers, 
+  getActivityLogs,
+  logActivity
+} = require('../db/fileDatabase');
 
+const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'trusttap_secret_key';
 
-// Get all users (for admin dashboard)
+// Get all users
 router.get('/users', (req, res) => {
-  // Verify JWT token
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res.status(401).json({ error: 'Authorization token required' });
   }
   
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
     
-    // Check if user is an admin
     if (decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
+      return res.status(403).json({ error: 'Not authorized' });
     }
-    
-    // Get all users
-    const users = getAllUsers();
-    
-    res.json({
-      users: users.map(user => ({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        full_name: user.full_name,
-        phone: user.phone,
-        address: user.address,
-        occupation: user.occupation,
-        role: user.role,
-        created_at: user.created_at
-      }))
-    });
-  });
-});
-
-// Get user details by ID
-router.get('/users/:userId', (req, res) => {
-  // Verify JWT token
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token required' });
-  }
-  
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
-    }
-    
-    // Check if user is an admin
-    if (decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
-    }
-    
-    const { userId } = req.params;
-    
-    const user = getUserById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    res.json({
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        full_name: user.full_name,
-        phone: user.phone,
-        address: user.address,
-        occupation: user.occupation,
-        role: user.role,
-        created_at: user.created_at
-      }
-    });
-  });
-});
-
-// Update user details
-router.put('/users/:userId', (req, res) => {
-  // Verify JWT token
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token required' });
-  }
-  
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
-    }
-    
-    // Check if user is an admin
-    if (decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
-    }
-    
-    const { userId } = req.params;
-    const updates = req.body;
-    
-    // Remove sensitive fields that shouldn't be updated
-    const { id, username, role, created_at, ...allowedUpdates } = updates;
     
     try {
-      const updatedUser = updateUserProfile(userId, allowedUpdates);
+      const users = await getAllUsers();
       
-      res.json({
-        user: {
-          id: updatedUser.id,
-          username: updatedUser.username,
-          email: updatedUser.email,
-          fullName: updatedUser.fullName,
-          phone: updatedUser.phone,
-          address: updatedUser.address,
-          occupation: updatedUser.occupation,
-          role: updatedUser.role
-        },
-        message: 'User updated successfully'
-      });
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'ADMIN_VIEW_ALL_USERS', null, { userCount: users.length });
+      
+      res.json(users);
     } catch (error) {
-      console.error('Error updating user:', error);
-      if (error.message === 'User not found') {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      res.status(500).json({ error: 'Error updating user' });
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Error fetching users' });
     }
   });
 });
 
-// Delete user
-router.delete('/users/:userId', (req, res) => {
-  // Verify JWT token
+// Get activity logs (admin only)
+router.get('/activity-logs', (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res.status(401).json({ error: 'Authorization token required' });
   }
   
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
     
-    // Check if user is an admin
     if (decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Not authorized to access this resource' });
-    }
-    
-    const { userId } = req.params;
-    
-    // Prevent deleting admin users
-    const userToDelete = getUserById(userId);
-    if (!userToDelete) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    if (userToDelete.role === 'admin') {
-      return res.status(403).json({ error: 'Cannot delete admin users' });
+      return res.status(403).json({ error: 'Not authorized' });
     }
     
     try {
-      deleteUser(userId);
-      res.json({
-        message: `User with ID ${userId} deleted successfully`
-      });
+      // Extract query parameters for filtering
+      const { userId, role, action, startDate, endDate, limit, offset } = req.query;
+      
+      const filters = {
+        userId,
+        role,
+        action,
+        startDate,
+        endDate,
+        limit: limit ? parseInt(limit) : 100,
+        offset: offset ? parseInt(offset) : 0
+      };
+      
+      const logs = await getActivityLogs(filters);
+      
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'ADMIN_VIEW_ACTIVITY_LOGS', null, { filter: filters });
+      
+      res.json(logs);
     } catch (error) {
-      console.error('Error deleting user:', error);
-      res.status(500).json({ error: 'Error deleting user' });
+      console.error('Error fetching activity logs:', error);
+      res.status(500).json({ error: 'Error fetching activity logs' });
+    }
+  });
+});
+
+// Get activity log statistics
+router.get('/activity-stats', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization token required' });
+  }
+  
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+    
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+    
+    try {
+      // In a real implementation, we would get statistics from the database
+      // For now, we'll return mock data
+      
+      const stats = {
+        totalLogs: 1250,
+        logsByAction: {
+          'LOGIN': 320,
+          'UPLOAD_DOC': 180,
+          'CREATE_ASSESSMENT': 95,
+          'UPDATE_STATUS': 75,
+          'MODIFY_DATA': 140,
+          'VIEW_PROFILE': 210,
+          'VIEW_DOCUMENTS': 110,
+          'CREATE_USER': 120
+        },
+        logsByRole: {
+          'user': 780,
+          'banker': 320,
+          'admin': 150
+        },
+        recentActivity: [
+          { action: 'LOGIN', user: 'john_doe', timestamp: new Date(Date.now() - 1000 * 60 * 5) },
+          { action: 'UPLOAD_DOC', user: 'jane_smith', timestamp: new Date(Date.now() - 1000 * 60 * 15) },
+          { action: 'CREATE_ASSESSMENT', user: 'banker1', timestamp: new Date(Date.now() - 1000 * 60 * 30) }
+        ]
+      };
+      
+      // Log the action
+      await logActivity(decoded.userId, decoded.role, 'ADMIN_VIEW_ACTIVITY_STATS', null, {});
+      
+      res.json(stats);
+    } catch (error) {
+      console.error('Error fetching activity stats:', error);
+      res.status(500).json({ error: 'Error fetching activity stats' });
     }
   });
 });

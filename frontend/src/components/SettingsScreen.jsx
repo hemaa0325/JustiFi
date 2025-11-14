@@ -99,14 +99,19 @@ const SettingsScreen = ({ onBack, language }) => {
   return (
     <div className="settings-screen">
       <div className="header">
-        <button className="back-button" onClick={onBack}>←</button>
-        <h1>{t('settings', language)}</h1>
+        <button className="back-button btn btn-secondary" onClick={onBack}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+        </button>
+        <h1 className="page-title">{t('settings', language)}</h1>
       </div>
       <div className="settings-container">
-        <div className="settings-card">
-          <h2>{t('notifications', language)}</h2>
+        <div className="settings-card card">
+          <h2 className="section-title">{t('notifications', language)}</h2>
           <div className="setting-item">
-            <label htmlFor="notifications">{t('enable_notifications', language)}</label>
+            <label className="label" htmlFor="notifications">{t('enable_notifications', language)}</label>
             <div className="toggle-switch" onClick={() => handleToggle('notifications', settings.notifications)}>
               <input
                 type="checkbox"
@@ -119,7 +124,7 @@ const SettingsScreen = ({ onBack, language }) => {
           </div>
 
           <div className="setting-item">
-            <label htmlFor="emailNotifications">{t('email_notifications', language)}</label>
+            <label className="label" htmlFor="emailNotifications">{t('email_notifications', language)}</label>
             <div className="toggle-switch" onClick={() => settings.notifications && handleToggle('emailNotifications', settings.emailNotifications)}>
               <input
                 type="checkbox"
@@ -133,7 +138,7 @@ const SettingsScreen = ({ onBack, language }) => {
           </div>
 
           <div className="setting-item">
-            <label htmlFor="smsNotifications">{t('sms_notifications', language)}</label>
+            <label className="label" htmlFor="smsNotifications">{t('sms_notifications', language)}</label>
             <div className="toggle-switch" onClick={() => settings.notifications && handleToggle('smsNotifications', settings.smsNotifications)}>
               <input
                 type="checkbox"
@@ -147,10 +152,10 @@ const SettingsScreen = ({ onBack, language }) => {
           </div>
         </div>
 
-        <div className="settings-card">
-          <h2>{t('appearance', language)}</h2>
+        <div className="settings-card card">
+          <h2 className="section-title">{t('appearance', language)}</h2>
           <div className="setting-item">
-            <label htmlFor="darkMode">{t('dark_mode', language)}</label>
+            <label className="label" htmlFor="darkMode">{t('dark_mode', language)}</label>
             <div className="toggle-switch" onClick={() => handleToggle('darkMode', settings.darkMode)}>
               <input
                 type="checkbox"
@@ -165,12 +170,13 @@ const SettingsScreen = ({ onBack, language }) => {
           {/* Removed viewMode setting since we're keeping only mobile view */}
         </div>
 
-        <div className="settings-card">
-          <h2>{t('preferences', language)}</h2>
+        <div className="settings-card card">
+          <h2 className="section-title">{t('preferences', language)}</h2>
           <div className="setting-item">
-            <label htmlFor="language">{t('language', language)}</label>
+            <label className="label" htmlFor="language">{t('language', language)}</label>
             <select
               id="language"
+              className="input"
               value={settings.language}
               onChange={(e) => handleSelectChange('language', e)}
             >
@@ -183,9 +189,10 @@ const SettingsScreen = ({ onBack, language }) => {
           </div>
 
           <div className="setting-item">
-            <label htmlFor="currency">{t('currency', language)}</label>
+            <label className="label" htmlFor="currency">{t('currency', language)}</label>
             <select
               id="currency"
+              className="input"
               value={settings.currency}
               onChange={(e) => handleSelectChange('currency', e)}
             >
@@ -197,10 +204,10 @@ const SettingsScreen = ({ onBack, language }) => {
         </div>
 
         <div className="settings-actions">
-          <button className="reset-button" onClick={handleReset}>
+          <button className="reset-button btn btn-secondary" onClick={handleReset}>
             {t('reset_to_default', language)}
           </button>
-          <button className="save-button" onClick={handleSave}>
+          <button className="save-button btn btn-primary" onClick={handleSave}>
             {t('save_settings', language)}
           </button>
         </div>

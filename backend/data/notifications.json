@@ -1,0 +1,20 @@
+[
+  {
+    "id": "mhybds4zsykzqu8gyv",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "title": "Loan Approved",
+    "message": "Your loan request for ₹5,000 has been approved!",
+    "type": "success",
+    "read": false,
+    "created_at": "2025-11-14T03:44:38.579Z"
+  },
+  {
+    "id": "mhybermwwly0neszrsd",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "title": "Loan Approved",
+    "message": "Your loan request for ₹5,000 has been approved!",
+    "type": "success",
+    "read": false,
+    "created_at": "2025-11-14T03:45:24.584Z"
+  }
+]

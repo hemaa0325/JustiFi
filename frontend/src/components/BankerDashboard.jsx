@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { bankerService } from '../services/bankerService';
-import './BankerDashboard.css';
+import * as bankerService from '../services/bankerService';
+import '../styles/BankerDashboard.css';
 
-const BankerDashboard = () => {
+const BankerDashboard = ({ onLogout, language }) => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [assessmentResult, setAssessmentResult] = useState(null);
+  const [loanRequests, setLoanRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('users');
 
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  // Poll for loan requests updates
+  useEffect(() => {
+    if (activeTab === 'loanRequests') {
+      const interval = setInterval(() => {
+        fetchLoanRequests();
+      }, 30000); // Refresh every 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [activeTab]);
 
   const fetchUsers = async () => {
     try {
@@ -21,6 +33,18 @@ const BankerDashboard = () => {
       setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLoanRequests = async () => {
+    try {
+      setLoading(true);
+      const data = await bankerService.getLoanRequests();
+      setLoanRequests(data);
+    } catch (error) {
+      console.error('Error fetching loan requests:', error);
     } finally {
       setLoading(false);
     }
@@ -53,6 +77,44 @@ const BankerDashboard = () => {
     }
   };
 
+  const handleApproveLoan = async (loanId) => {
+    try {
+      setLoading(true);
+      const result = await bankerService.updateLoanStatus(loanId, 'approved');
+      // Refresh loan requests
+      fetchLoanRequests();
+      // Show success message
+      alert('Loan approved successfully!');
+      
+      // In a real application, we would send a notification to the user
+      console.log('Loan approved, notification should be sent to user');
+    } catch (error) {
+      console.error('Error approving loan:', error);
+      alert('Failed to approve loan: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRejectLoan = async (loanId) => {
+    try {
+      setLoading(true);
+      const result = await bankerService.updateLoanStatus(loanId, 'rejected');
+      // Refresh loan requests
+      fetchLoanRequests();
+      // Show success message
+      alert('Loan rejected successfully!');
+      
+      // In a real application, we would send a notification to the user
+      console.log('Loan rejected, notification should be sent to user');
+    } catch (error) {
+      console.error('Error rejecting loan:', error);
+      alert('Failed to reject loan: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resetSelection = () => {
     setSelectedUser(null);
     setUserDetails(null);
@@ -60,11 +122,34 @@ const BankerDashboard = () => {
     setActiveTab('users');
   };
 
+  const getScoreClass = (score) => {
+    if (score >= 80) return 'excellent';
+    if (score >= 65) return 'good';
+    if (score >= 50) return 'fair';
+    if (score >= 30) return 'poor';
+    return 'very-poor';
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
   const renderUsersList = () => (
-    <div className="users-list">
-      <h2>All Users</h2>
+    <div className="users-list card">
+      <div className="dashboard-header">
+        <h2 className="section-title">All Users</h2>
+        <button className="refresh-button btn btn-secondary" onClick={fetchUsers}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+            <path d="M3 21v-5h5"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
       {loading ? (
-        <p>Loading users...</p>
+        <p className="loading">Loading users...</p>
       ) : (
         <table className="users-table">
           <thead>
@@ -84,7 +169,7 @@ const BankerDashboard = () => {
                 <td>{user.occupation || 'N/A'}</td>
                 <td>{user.creditScore || 'Not assessed'}</td>
                 <td>
-                  <button onClick={() => fetchUserDetails(user.id)}>
+                  <button onClick={() => fetchUserDetails(user.id)} className="btn btn-primary">
                     Assess
                   </button>
                 </td>
@@ -96,53 +181,133 @@ const BankerDashboard = () => {
     </div>
   );
 
+  const renderLoanRequests = () => (
+    <div className="loan-requests card">
+      <div className="dashboard-header">
+        <h2 className="section-title">Pending Loan Requests</h2>
+        <button className="refresh-button btn btn-secondary" onClick={fetchLoanRequests}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+            <path d="M3 21v-5h5"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      {loading ? (
+        <p className="loading">Loading loan requests...</p>
+      ) : (
+        <table className="loan-requests-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Amount</th>
+              <th>Requested On</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loanRequests.filter(lr => lr.status === 'pending').map(loanRequest => {
+              const user = users.find(u => u.id === loanRequest.user_id) || {};
+              return (
+                <tr key={loanRequest.id}>
+                  <td>{user.fullName || user.username || 'Unknown User'}</td>
+                  <td>₹{loanRequest.amount?.toLocaleString()}</td>
+                  <td>{formatDate(loanRequest.created_at)}</td>
+                  <td>
+                    <span className={`status-badge ${loanRequest.status}`}>
+                      {loanRequest.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-buttons">
+                      <button 
+                        onClick={() => handleApproveLoan(loanRequest.id)} 
+                        className="btn btn-primary"
+                        disabled={loading}
+                      >
+                        Approve
+                      </button>
+                      <button 
+                        onClick={() => handleRejectLoan(loanRequest.id)} 
+                        className="btn btn-secondary"
+                        disabled={loading}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+            {loanRequests.filter(lr => lr.status === 'pending').length === 0 && (
+              <tr>
+                <td colSpan="5" className="no-data">
+                  No pending loan requests
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+
   const renderAssessmentPanel = () => (
-    <div className="assessment-panel">
+    <div className="assessment-panel card">
       <div className="panel-header">
-        <h2>User Assessment: {selectedUser?.fullName || selectedUser?.username}</h2>
-        <button onClick={resetSelection} className="back-button">Back to Users</button>
+        <h2 className="section-title">User Assessment: {selectedUser?.fullName || selectedUser?.username}</h2>
+        <button onClick={resetSelection} className="back-button btn btn-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+          Back to Users
+        </button>
       </div>
       
       {userDetails && (
         <div className="user-details">
-          <h3>User Information</h3>
+          <h3 className="subsection-title">User Information</h3>
           <div className="info-grid">
             <div className="info-item">
-              <label>Email:</label>
-              <span>{userDetails.user.email}</span>
+              <label className="label">Email:</label>
+              <span className="value">{userDetails.user.email}</span>
             </div>
             <div className="info-item">
-              <label>Phone:</label>
-              <span>{userDetails.user.phone || 'N/A'}</span>
+              <label className="label">Phone:</label>
+              <span className="value">{userDetails.user.phone || 'N/A'}</span>
             </div>
             <div className="info-item">
-              <label>Address:</label>
-              <span>{userDetails.user.address || 'N/A'}</span>
+              <label className="label">Address:</label>
+              <span className="value">{userDetails.user.address || 'N/A'}</span>
             </div>
             <div className="info-item">
-              <label>Occupation:</label>
-              <span>{userDetails.user.occupation || 'N/A'}</span>
+              <label className="label">Occupation:</label>
+              <span className="value">{userDetails.user.occupation || 'N/A'}</span>
             </div>
           </div>
           
-          <h3>Submitted Documents ({userDetails.documents.length})</h3>
+          <h3 className="subsection-title">Submitted Documents ({userDetails.documents.length})</h3>
           <div className="documents-list">
             {userDetails.documents.length > 0 ? (
               userDetails.documents.map(doc => (
                 <div key={doc.id} className="document-item">
-                  <span>{doc.name}</span>
-                  <span className="doc-type">({doc.type})</span>
+                  <span className="document-name">{doc.name}</span>
+                  <span className="document-type">({doc.type})</span>
                 </div>
               ))
             ) : (
-              <p>No documents submitted</p>
+              <p className="no-documents">No documents submitted</p>
             )}
           </div>
           
-          <h3>Transaction History ({userDetails.transactions.length} items)</h3>
+          <h3 className="subsection-title">Transaction History ({userDetails.transactions.length} items)</h3>
           <div className="transactions-list">
             {userDetails.transactions.length > 0 ? (
-              <table>
+              <table className="transactions-table">
                 <thead>
                   <tr>
                     <th>Date</th>
@@ -163,13 +328,13 @@ const BankerDashboard = () => {
                 </tbody>
               </table>
             ) : (
-              <p>No transaction history available</p>
+              <p className="no-transactions">No transaction history available</p>
             )}
           </div>
           
           <button 
             onClick={() => performAssessment(selectedUser.id)} 
-            className="assess-button"
+            className="assess-button btn btn-primary"
             disabled={loading}
           >
             {loading ? 'Analyzing...' : 'Perform Advanced AI Assessment'}
@@ -180,16 +345,22 @@ const BankerDashboard = () => {
   );
 
   const renderResults = () => (
-    <div className="results-panel">
+    <div className="results-panel card">
       <div className="panel-header">
-        <h2>AI Assessment Results</h2>
-        <button onClick={resetSelection} className="back-button">Back to Users</button>
+        <h2 className="section-title">AI Assessment Results</h2>
+        <button onClick={resetSelection} className="back-button btn btn-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+          Back to Users
+        </button>
       </div>
       
       {assessmentResult && (
         <div className="results-content">
           <div className={`score-card ${getScoreClass(assessmentResult.score)}`}>
-            <h3>Credit Score</h3>
+            <h3 className="subsection-title">Credit Score</h3>
             <div className="score-value">{assessmentResult.score}/100</div>
             <div className="decision">
               Decision: <strong>{assessmentResult.decision.replace('_', ' ')}</strong>
@@ -197,100 +368,122 @@ const BankerDashboard = () => {
             <div className="loan-amount">
               Recommended Loan Amount: <strong>${assessmentResult.loanAmount.toLocaleString()}</strong>
             </div>
-          </div>
-          
-          <div className="message-section">
-            <h3>AI Analysis Summary</h3>
-            <p>{assessmentResult.message}</p>
-          </div>
-          
-          <div className="detailed-analysis">
-            <h3>Detailed Component Scores</h3>
-            <div className="component-scores">
-              {Object.entries(assessmentResult.componentScores).map(([component, data]) => (
-                <div key={component} className="component-score">
-                  <div className="component-name">{component.replace(/([A-Z])/g, ' $1')}</div>
-                  <div className="component-value">{data.score}/50</div>
-                </div>
-              ))}
+            <div className="safety-level">
+              Safety Level: <strong>{assessmentResult.safetyLevel}</strong>
             </div>
           </div>
           
           <div className="reasons-section">
-            <h3>Scoring Factors</h3>
-            <ul className="reasons-list">
-              {assessmentResult.reasons.map((reason, index) => (
-                <li key={index}>{reason}</li>
-              ))}
+            <h3 className="subsection-title">Analysis Explanations</h3>
+            <ul className="explanations-list">
+              {assessmentResult.explanations && assessmentResult.explanations.length > 0 ? (
+                assessmentResult.explanations.slice(0, 5).map((explanation, index) => (
+                  <li key={index} className="explanation-item">
+                    <div className="explanation-content">
+                      <span className="explanation-text">{explanation.explanation || explanation}</span>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="explanation-item">
+                  <div className="explanation-content">
+                    <span className="explanation-text">No explanations available</span>
+                  </div>
+                </li>
+              )}
             </ul>
           </div>
           
-          <div className="external-data">
-            <h3>External Credit Bureau Data</h3>
-            <div className="external-info">
-              <div className="info-item">
-                <label>External Score:</label>
-                <span>{assessmentResult.externalData.score}</span>
-              </div>
-              <div className="info-item">
-                <label>Inquiries:</label>
-                <span>{assessmentResult.externalData.inquiries}</span>
-              </div>
-              <div className="info-item">
-                <label>Derogatory Marks:</label>
-                <span>{assessmentResult.externalData.derogatoryMarks}</span>
-              </div>
-              <div className="info-item">
-                <label>Credit Age:</label>
-                <span>{Math.floor(assessmentResult.externalData.creditAgeMonths / 12)} years</span>
-              </div>
-            </div>
+          <div className="action-buttons">
+            <button 
+              onClick={() => {
+                // In a real app, this would initiate the disbursement process
+                alert('Loan disbursement would be initiated here');
+              }} 
+              className="disburse-button btn btn-primary"
+              disabled={assessmentResult.decision === 'REJECT' || assessmentResult.decision === 'REVIEW'}
+            >
+              Disburse Loan
+            </button>
+            <button 
+              onClick={() => {
+                // In a real app, this would reject the application
+                alert('Application would be rejected here');
+              }} 
+              className="reject-button btn btn-secondary"
+            >
+              Reject
+            </button>
+            <button 
+              onClick={() => {
+                // In a real app, this would put the application on hold
+                alert('Application would be put on hold for review');
+              }} 
+              className="hold-button btn btn-secondary"
+            >
+              Put on Hold
+            </button>
           </div>
         </div>
       )}
     </div>
   );
 
-  const getScoreClass = (score) => {
-    if (score >= 80) return 'excellent';
-    if (score >= 65) return 'good';
-    if (score >= 50) return 'fair';
-    return 'poor';
-  };
-
   return (
     <div className="banker-dashboard">
-      <header className="dashboard-header">
-        <h1>Banker Dashboard</h1>
-        <nav className="dashboard-tabs">
-          <button 
-            className={activeTab === 'users' ? 'active' : ''}
-            onClick={() => setActiveTab('users')}
-          >
-            Users
-          </button>
-          <button 
-            className={activeTab === 'assessment' ? 'active' : ''}
-            onClick={() => selectedUser && setActiveTab('assessment')}
-            disabled={!selectedUser}
-          >
-            Assessment
-          </button>
-          <button 
-            className={activeTab === 'results' ? 'active' : ''}
-            onClick={() => assessmentResult && setActiveTab('results')}
-            disabled={!assessmentResult}
-          >
-            Results
-          </button>
-        </nav>
-      </header>
-      
-      <main className="dashboard-content">
-        {activeTab === 'users' && renderUsersList()}
-        {activeTab === 'assessment' && renderAssessmentPanel()}
-        {activeTab === 'results' && renderResults()}
-      </main>
+      <div className="app-container">
+        <div className="dashboard-header card">
+          <h1 className="dashboard-title">Banker Dashboard</h1>
+          <div className="header-actions">
+            <div className="dashboard-tabs">
+              <button 
+                className={`btn ${activeTab === 'users' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => setActiveTab('users')}
+              >
+                Users
+              </button>
+              <button 
+                className={`btn ${activeTab === 'loanRequests' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => {
+                  setActiveTab('loanRequests');
+                  fetchLoanRequests();
+                }}
+              >
+                Loan Requests
+              </button>
+              <button 
+                className={`btn ${activeTab === 'assessment' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => activeTab === 'assessment' && setSelectedUser(null)}
+                disabled={activeTab !== 'assessment' && !selectedUser}
+              >
+                Assessment
+              </button>
+              <button 
+                className={`btn ${activeTab === 'results' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => activeTab === 'results' && setAssessmentResult(null)}
+                disabled={activeTab !== 'results' && !assessmentResult}
+              >
+                Results
+              </button>
+            </div>
+            <button onClick={onLogout} className="logout-button btn btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" x2="9" y1="12" y2="12"/>
+              </svg>
+              Logout
+            </button>
+          </div>
+        </div>
+        
+        <div className="dashboard-content">
+          {activeTab === 'users' && renderUsersList()}
+          {activeTab === 'loanRequests' && renderLoanRequests()}
+          {activeTab === 'assessment' && renderAssessmentPanel()}
+          {activeTab === 'results' && renderResults()}
+        </div>
+      </div>
     </div>
   );
 };

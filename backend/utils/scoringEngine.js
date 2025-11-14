@@ -1,164 +1,172 @@
-// Advanced Credit Scoring Engine with AI Capabilities
-const fs = require('fs');
-const path = require('path');
+// Advanced Credit Scoring Engine with File-based Database Integration
+const { createAssessment, getAssessmentsByUserId } = require('../db/fileDatabase');
 
-// Enhanced scoring factors with weights
+// Enhanced scoring factors with weights for proportional scoring
 const SCORING_FACTORS = {
-  incomeStability: 0.25,
-  spendingPattern: 0.20,
-  debtToIncome: 0.15,
-  creditHistory: 0.15,
-  employment: 0.10,
-  savingsPattern: 0.10,
-  transactionVolume: 0.05
+  incomeStability: 0.15,
+  spendingPattern: 0.15,
+  savingsBehavior: 0.15,
+  debtToIncome: 0.12,
+  repaymentHistory: 0.12,
+  externalCredit: 0.10,
+  receiptQuality: 0.08,
+  transactionVolume: 0.03,
+  employmentVerification: 0.05,
+  financialStability: 0.05
 };
 
-// Risk thresholds
-const RISK_THRESHOLDS = {
-  excellent: 80,
-  good: 65,
-  fair: 50,
-  poor: 30
+// Safety level thresholds
+const SAFETY_LEVELS = {
+  unsafe: 60,
+  okay: 80,
+  verySafe: 100
 };
 
 // Enhanced document analysis function
 const analyzeDocument = (document) => {
-  // This would be replaced with actual OCR and NLP processing in a real implementation
-  // For now, we'll simulate document analysis based on document type
   const docType = document.type || 'unknown';
   let scoreImpact = 0;
-  let reasons = [];
+  let explanations = [];
   
   switch(docType.toLowerCase()) {
-    case 'paystub':
-      scoreImpact = 15;
-      reasons.push('+15 points for verified income documentation');
+    case 'salary_receipt':
+      scoreImpact = 25;
+      explanations.push({
+        factor: 'receipt_quality',
+        points: 25,
+        explanation: 'Points added because your salary receipt shows stable employment and verified income.'
+      });
       break;
     case 'bank_statement':
-      scoreImpact = 10;
-      reasons.push('+10 points for verified banking history');
-      break;
-    case 'tax_return':
       scoreImpact = 20;
-      reasons.push('+20 points for verified tax documentation');
+      explanations.push({
+        factor: 'receipt_quality',
+        points: 20,
+        explanation: 'Points added because your bank statement provides comprehensive financial history.'
+      });
       break;
-    case 'utility_bill':
-      scoreImpact = 5;
-      reasons.push('+5 points for verified address');
+    case 'aadhaar':
+    case 'aadhar_card':
+    case 'id_document':
+      // Check if it's an Aadhar card based on type
+      if (docType.toLowerCase().includes('aadhar')) {
+        scoreImpact = 15;
+        explanations.push({
+          factor: 'receipt_quality',
+          points: 15,
+          explanation: 'Points added because your Aadhaar card verifies your identity.'
+        });
+      } else if (docType.toLowerCase().includes('pan')) {
+        scoreImpact = 20;
+        explanations.push({
+          factor: 'receipt_quality',
+          points: 20,
+          explanation: 'Points added because your PAN card verifies your tax identity.'
+        });
+      } else {
+        // Generic ID document
+        scoreImpact = 15;
+        explanations.push({
+          factor: 'receipt_quality',
+          points: 15,
+          explanation: 'Points added because your ID document verifies your identity.'
+        });
+      }
+      break;
+    case 'pan':
+    case 'pan_card':
+      scoreImpact = 20;
+      explanations.push({
+        factor: 'receipt_quality',
+        points: 20,
+        explanation: 'Points added because your PAN card verifies your tax identity.'
+      });
       break;
     default:
-      scoreImpact = 2;
-      reasons.push('+2 points for document submission');
+      scoreImpact = 10;
+      explanations.push({
+        factor: 'receipt_quality',
+        points: 10,
+        explanation: 'Points added because you submitted documentation, showing financial awareness.'
+      });
   }
   
-  return { scoreImpact, reasons };
+  return { scoreImpact, explanations };
 };
 
 // Enhanced spending pattern analysis
 const analyzeSpendingPattern = (transactions) => {
   if (!transactions || transactions.length === 0) {
-    return { score: 0, reasons: ['+0 points for no transaction history'] };
+    return { 
+      score: 0, 
+      explanations: [{
+        factor: 'spending_pattern',
+        points: 0,
+        explanation: 'No points added or deducted due to lack of transaction history.'
+      }] 
+    };
   }
   
   let score = 0;
-  let reasons = [];
+  let explanations = [];
   
   // Calculate transaction frequency
   const transactionCount = transactions.length;
-  if (transactionCount >= 50) {
+  if (transactionCount >= 100) {
+    score += 25;
+    explanations.push({
+      factor: 'spending_pattern',
+      points: 25,
+      explanation: 'Points added because you have a high transaction volume, indicating active financial behavior.'
+    });
+  } else if (transactionCount >= 50) {
     score += 15;
-    reasons.push('+15 points for high transaction volume (50+ transactions)');
+    explanations.push({
+      factor: 'spending_pattern',
+      points: 15,
+      explanation: 'Points added because you have a good transaction volume, showing consistent financial activity.'
+    });
   } else if (transactionCount >= 20) {
     score += 10;
-    reasons.push('+10 points for moderate transaction volume (20-49 transactions)');
-  } else if (transactionCount >= 5) {
-    score += 5;
-    reasons.push('+5 points for basic transaction history (5-19 transactions)');
-  } else {
-    reasons.push('+0 points for limited transaction history (<5 transactions)');
+    explanations.push({
+      factor: 'spending_pattern',
+      points: 10,
+      explanation: 'Points added because you have a moderate transaction volume, indicating regular financial engagement.'
+    });
   }
   
-  // Analyze spending categories
-  const categories = {};
-  transactions.forEach(transaction => {
-    const category = transaction.category || 'other';
-    categories[category] = (categories[category] || 0) + Math.abs(transaction.amount);
-  });
-  
-  // Check for essential spending (positive indicator)
-  const essentialCategories = ['groceries', 'utilities', 'housing', 'insurance'];
-  const essentialSpending = Object.keys(categories)
-    .filter(cat => essentialCategories.includes(cat))
-    .reduce((sum, cat) => sum + categories[cat], 0);
-  
-  if (essentialSpending > 0) {
-    score += 10;
-    reasons.push('+10 points for consistent essential spending');
-  }
-  
-  // Check for risky spending (negative indicator)
-  const riskyCategories = ['gambling', 'casino', 'adult'];
-  const riskySpending = Object.keys(categories)
-    .filter(cat => riskyCategories.includes(cat))
-    .reduce((sum, cat) => sum + categories[cat], 0);
-  
-  if (riskySpending > 0) {
-    score -= 15;
-    reasons.push('-15 points for high-risk spending categories');
-  }
-  
-  // Analyze spending consistency
-  const monthlySpending = {};
-  transactions.forEach(transaction => {
-    const date = new Date(transaction.date);
-    const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
-    if (!monthlySpending[monthKey]) {
-      monthlySpending[monthKey] = 0;
-    }
-    monthlySpending[monthKey] += Math.abs(transaction.amount);
-  });
-  
-  const monthlyAmounts = Object.values(monthlySpending);
-  if (monthlyAmounts.length > 1) {
-    const average = monthlyAmounts.reduce((sum, amount) => sum + amount, 0) / monthlyAmounts.length;
-    const variance = monthlyAmounts.reduce((sum, amount) => sum + Math.pow(amount - average, 2), 0) / monthlyAmounts.length;
-    const stdDev = Math.sqrt(variance);
-    const cv = (stdDev / average) * 100;
-    
-    if (cv < 20) {
-      score += 15;
-      reasons.push('+15 points for consistent monthly spending pattern');
-    } else if (cv < 40) {
-      score += 5;
-      reasons.push('+5 points for moderately consistent spending pattern');
-    } else {
-      score -= 10;
-      reasons.push('-10 points for inconsistent spending pattern');
-    }
-  }
-  
-  return { score: Math.max(0, Math.min(50, score)), reasons };
+  return { score: Math.max(-10, Math.min(40, score)), explanations };
 };
 
 // Enhanced income stability analysis
 const analyzeIncomeStability = (transactions) => {
   if (!transactions || transactions.length === 0) {
-    return { score: 0, reasons: ['+0 points for no income data'] };
+    return { 
+      score: 0, 
+      explanations: [{
+        factor: 'income_stability',
+        points: 0,
+        explanation: 'No points added or deducted due to lack of income data.'
+      }] 
+    };
   }
   
-  // Filter for income transactions (positive amounts)
-  const incomeTransactions = transactions.filter(t => t.amount > 0 && 
-    (t.description.toLowerCase().includes('payroll') || 
-     t.description.toLowerCase().includes('salary') || 
-     t.description.toLowerCase().includes('wage') ||
-     t.category === 'income'));
+  // Filter for income transactions
+  const incomeTransactions = transactions.filter(t => t.amount > 0);
   
   if (incomeTransactions.length === 0) {
-    return { score: 5, reasons: ['+5 points for any positive cash flow'] };
+    return { 
+      score: 5, 
+      explanations: [{
+        factor: 'income_stability',
+        points: 5,
+        explanation: 'Points added because you have some positive cash flow, indicating financial activity.'
+      }] 
+    };
   }
   
   let score = 0;
-  let reasons = [];
+  let explanations = [];
   
   // Frequency of income
   const incomeDates = [...new Set(incomeTransactions.map(t => {
@@ -166,61 +174,71 @@ const analyzeIncomeStability = (transactions) => {
     return `${date.getFullYear()}-${date.getMonth()}`;
   }))].sort();
   
-  if (incomeDates.length >= 6) {
+  if (incomeDates.length >= 12) {
+    score += 30;
+    explanations.push({
+      factor: 'income_stability',
+      points: 30,
+      explanation: 'Points added because you have stable income over 12+ months, indicating consistent employment.'
+    });
+  } else if (incomeDates.length >= 6) {
     score += 20;
-    reasons.push('+20 points for stable income over 6+ months');
+    explanations.push({
+      factor: 'income_stability',
+      points: 20,
+      explanation: 'Points added because you have stable income over 6+ months, indicating recent employment stability.'
+    });
   } else if (incomeDates.length >= 3) {
-    score += 15;
-    reasons.push('+15 points for stable income over 3+ months');
-  } else {
     score += 10;
-    reasons.push('+10 points for some income history');
+    explanations.push({
+      factor: 'income_stability',
+      points: 10,
+      explanation: 'Points added because you have stable income over 3+ months, indicating emerging employment stability.'
+    });
   }
   
-  // Consistency of income amounts
-  if (incomeTransactions.length > 1) {
-    const amounts = incomeTransactions.map(t => t.amount);
-    const average = amounts.reduce((sum, amount) => sum + amount, 0) / amounts.length;
-    const variance = amounts.reduce((sum, amount) => sum + Math.pow(amount - average, 2), 0) / amounts.length;
-    const stdDev = Math.sqrt(variance);
-    const cv = (stdDev / average) * 100;
-    
-    if (cv < 15) {
-      score += 15;
-      reasons.push('+15 points for consistent income amounts');
-    } else if (cv < 30) {
-      score += 10;
-      reasons.push('+10 points for moderately consistent income');
-    } else {
-      score += 5;
-      reasons.push('+5 points for variable income');
-    }
-  }
-  
-  return { score: Math.max(0, Math.min(50, score)), reasons };
+  return { score: Math.max(0, Math.min(50, score)), explanations };
 };
 
 // Enhanced debt analysis
 const analyzeDebt = (transactions) => {
   if (!transactions || transactions.length === 0) {
-    return { score: 20, reasons: ['+20 points for no apparent debt'] };
+    return { 
+      score: 25, 
+      explanations: [{
+        factor: 'debt_ratio',
+        points: 25,
+        explanation: 'Points added because there is no apparent debt in your transaction history.'
+      }] 
+    };
   }
   
   // Filter for debt-related transactions
   const debtTransactions = transactions.filter(t => 
     t.description.toLowerCase().includes('credit') ||
     t.description.toLowerCase().includes('loan') ||
-    t.description.toLowerCase().includes('mortgage') ||
-    t.category === 'debt_payment' ||
+    t.description.toLowerCase().includes('emi') ||
+    t.category === 'credit_card' ||
     t.category === 'loan_payment'
   );
   
   if (debtTransactions.length === 0) {
-    return { score: 25, reasons: ['+25 points for no apparent debt obligations'] };
+    return { 
+      score: 35, 
+      explanations: [{
+        factor: 'debt_ratio',
+        points: 35,
+        explanation: 'Points added because you have no apparent debt obligations, indicating very low financial risk.'
+      }] 
+    };
   }
   
-  let score = 20;
-  let reasons = ['+20 base points for debt analysis'];
+  let score = 25;
+  let explanations = [{
+    factor: 'debt_ratio',
+    points: 25,
+    explanation: 'Base points for debt analysis based on your debt payment history.'
+  }];
   
   // Calculate total debt payments
   const totalDebtPayments = debtTransactions.reduce((sum, t) => sum + Math.abs(t.amount), 0);
@@ -229,318 +247,243 @@ const analyzeDebt = (transactions) => {
   if (totalIncome > 0) {
     const debtToIncomeRatio = totalDebtPayments / totalIncome;
     
-    if (debtToIncomeRatio < 0.2) {
+    if (debtToIncomeRatio < 0.1) {
+      score += 25;
+      explanations.push({
+        factor: 'debt_ratio',
+        points: 25,
+        explanation: 'Points added because your debt-to-income ratio is low, indicating strong financial health.'
+      });
+    } else if (debtToIncomeRatio < 0.2) {
       score += 15;
-      reasons.push('+15 points for healthy debt-to-income ratio (<20%)');
-    } else if (debtToIncomeRatio < 0.4) {
+      explanations.push({
+        factor: 'debt_ratio',
+        points: 15,
+        explanation: 'Points added because your debt-to-income ratio is moderate, indicating manageable debt levels.'
+      });
+    } else if (debtToIncomeRatio < 0.3) {
       score += 5;
-      reasons.push('+5 points for moderate debt-to-income ratio (20-40%)');
+      explanations.push({
+        factor: 'debt_ratio',
+        points: 5,
+        explanation: 'Points added because your debt-to-income ratio is acceptable, indicating reasonable debt burden.'
+      });
     } else {
       score -= 20;
-      reasons.push('-20 points for high debt-to-income ratio (>40%)');
+      explanations.push({
+        factor: 'debt_ratio',
+        points: -20,
+        explanation: 'Points deducted because your debt-to-income ratio is high, indicating potential financial strain.'
+      });
     }
   }
   
-  return { score: Math.max(0, Math.min(50, score)), reasons };
+  return { score: Math.max(-10, Math.min(50, score)), explanations };
+};
+
+// Enhanced repayment history analysis
+const analyzeRepaymentHistory = (transactions) => {
+  if (!transactions || transactions.length === 0) {
+    return { 
+      score: 15, 
+      explanations: [{
+        factor: 'repayment_history',
+        points: 15,
+        explanation: 'Points added because there is no apparent missed payment history.'
+      }] 
+    };
+  }
+  
+  // Look for late payment indicators
+  const latePayments = transactions.filter(t => 
+    t.description.toLowerCase().includes('late payment') ||
+    t.description.toLowerCase().includes('overdue') ||
+    t.description.toLowerCase().includes('penalty') ||
+    t.description.toLowerCase().includes('late fee') ||
+    t.category === 'late_fee'
+  );
+  
+  // Look for on-time payment indicators
+  const onTimePayments = transactions.filter(t => 
+    t.description.toLowerCase().includes('payment') &&
+    !t.description.toLowerCase().includes('late') &&
+    !t.description.toLowerCase().includes('overdue')
+  );
+  
+  let score = 15;
+  let explanations = [{
+    factor: 'repayment_history',
+    points: 15,
+    explanation: 'Base points for repayment history analysis.'
+  }];
+  
+  // Positive scoring for good repayment behavior
+  if (onTimePayments.length > 0) {
+    const onTimeScore = Math.min(20, Math.floor(onTimePayments.length / 2));
+    score += onTimeScore;
+    explanations.push({
+      factor: 'repayment_history',
+      points: onTimeScore,
+      explanation: 'Points added because you have a good history of on-time payments.'
+    });
+  }
+  
+  if (latePayments.length === 0) {
+    score += 30;
+    explanations.push({
+      factor: 'repayment_history',
+      points: 30,
+      explanation: 'Points added because you have a perfect repayment history with no late payments.'
+    });
+    return { score: Math.min(70, score), explanations };
+  }
+  
+  // Calculate penalty from late payments
+  const totalLateFees = latePayments.reduce((sum, t) => sum + Math.abs(t.amount), 0);
+  
+  if (totalLateFees < 50 && latePayments.length <= 2) {
+    score += 10;
+    explanations.push({
+      factor: 'repayment_history',
+      points: 10,
+      explanation: 'Points added because you have minimal late payment fees and few recent late payments.'
+    });
+  } else if (totalLateFees < 150 && latePayments.length <= 4) {
+    explanations.push({
+      factor: 'repayment_history',
+      points: 0,
+      explanation: 'No points added or deducted due to moderate late payment history.'
+    });
+  } else if (totalLateFees < 300 && latePayments.length <= 6) {
+    score -= 15;
+    explanations.push({
+      factor: 'repayment_history',
+      points: -15,
+      explanation: 'Points deducted because you have significant late payment fees and recent late payments.'
+    });
+  } else {
+    score -= 30;
+    explanations.push({
+      factor: 'repayment_history',
+      points: -30,
+      explanation: 'Points deducted because you have severe late payment issues with high fees and frequent recent late payments.'
+    });
+  }
+  
+  return { score: Math.max(-10, Math.min(50, score)), explanations };
 };
 
 // Enhanced employment verification
 const analyzeEmployment = (documents) => {
   if (!documents || documents.length === 0) {
-    return { score: 0, reasons: ['+0 points for no employment verification'] };
+    return { 
+      score: 0, 
+      explanations: [{
+        factor: 'employment_verification',
+        points: 0,
+        explanation: 'No points added or deducted due to lack of employment verification documents.'
+      }] 
+    };
   }
   
   // Look for employment-related documents
   const employmentDocs = documents.filter(doc => 
-    doc.type === 'paystub' || 
+    doc.type === 'salary_receipt' || 
     doc.type === 'employment_letter' ||
     doc.type === 'tax_return' ||
-    (doc.name && (doc.name.toLowerCase().includes('paystub') || 
-                  doc.name.toLowerCase().includes('employment') ||
-                  doc.name.toLowerCase().includes('w2') ||
-                  doc.name.toLowerCase().includes('1099')))
+    doc.type === 'paystub' ||
+    doc.type === 'w2'
   );
+  
+  let score = 0;
+  let explanations = [];
   
   if (employmentDocs.length > 0) {
-    return { 
-      score: 20, 
-      reasons: ['+20 points for employment verification documents'] 
-    };
+    score += 25;
+    explanations.push({
+      factor: 'employment_verification',
+      points: 25,
+      explanation: 'Points added because you provided employment-related documents, confirming stable income.'
+    });
   }
   
-  return { score: 5, reasons: ['+5 points for document submission'] };
+  return { score, explanations };
 };
 
-// Enhanced savings pattern analysis
-const analyzeSavings = (transactions) => {
-  if (!transactions || transactions.length === 0) {
-    return { score: 0, reasons: ['+0 points for no savings data'] };
-  }
-  
-  // Look for transfers to savings accounts
-  const savingsTransactions = transactions.filter(t => 
-    t.description.toLowerCase().includes('saving') ||
-    t.description.toLowerCase().includes('transfer') ||
-    t.category === 'savings' ||
-    (t.account && t.account.toLowerCase().includes('saving'))
-  );
-  
-  if (savingsTransactions.length === 0) {
-    return { score: 0, reasons: ['+0 points for no apparent savings activity'] };
-  }
-  
-  // Calculate total savings
-  const totalSavings = savingsTransactions.reduce((sum, t) => sum + Math.abs(t.amount), 0);
-  
-  if (totalSavings > 10000) {
-    return { 
-      score: 20, 
-      reasons: ['+20 points for substantial savings (> $10,000)'] 
+// Main scoring function that stores results in MySQL
+const calculateCreditScore = async (userId, documents, transactions) => {
+  try {
+    // Analyze each factor
+    const documentAnalysis = analyzeDocument(documents[0] || {});
+    const spendingAnalysis = analyzeSpendingPattern(transactions);
+    const incomeAnalysis = analyzeIncomeStability(transactions);
+    const debtAnalysis = analyzeDebt(transactions);
+    const repaymentAnalysis = analyzeRepaymentHistory(transactions);
+    const employmentAnalysis = analyzeEmployment(documents);
+    
+    // Calculate weighted score
+    const weightedScore = Math.round(
+      (documentAnalysis.scoreImpact || 0) * SCORING_FACTORS.receiptQuality +
+      spendingAnalysis.score * SCORING_FACTORS.spendingPattern +
+      incomeAnalysis.score * SCORING_FACTORS.incomeStability +
+      debtAnalysis.score * SCORING_FACTORS.debtToIncome +
+      repaymentAnalysis.score * SCORING_FACTORS.repaymentHistory +
+      employmentAnalysis.score * SCORING_FACTORS.employmentVerification
+    );
+    
+    // Ensure score is within bounds
+    const finalScore = Math.max(300, Math.min(850, weightedScore));
+    
+    // Determine safety level
+    let safetyLevel = 'unsafe';
+    if (finalScore >= SAFETY_LEVELS.verySafe) {
+      safetyLevel = 'very safe';
+    } else if (finalScore >= SAFETY_LEVELS.okay) {
+      safetyLevel = 'okay';
+    }
+    
+    // Combine all explanations
+    const allExplanations = [
+      ...documentAnalysis.explanations,
+      ...spendingAnalysis.explanations,
+      ...incomeAnalysis.explanations,
+      ...debtAnalysis.explanations,
+      ...repaymentAnalysis.explanations,
+      ...employmentAnalysis.explanations
+    ];
+    
+    // Store assessment in MySQL
+    const assessment = await createAssessment({
+      userId,
+      score: finalScore,
+      safetyLevel,
+      explanation: allExplanations
+    });
+    
+    return {
+      score: finalScore,
+      safetyLevel,
+      explanations: allExplanations,
+      assessmentId: assessment.id
     };
-  } else if (totalSavings > 5000) {
-    return { 
-      score: 15, 
-      reasons: ['+15 points for good savings (> $5,000)'] 
-    };
-  } else if (totalSavings > 1000) {
-    return { 
-      score: 10, 
-      reasons: ['+10 points for moderate savings (> $1,000)'] 
-    };
-  } else {
-    return { 
-      score: 5, 
-      reasons: ['+5 points for some savings activity'] 
-    };
+  } catch (error) {
+    console.error('Error calculating credit score:', error);
+    throw error;
   }
 };
 
-// Main credit scoring function
-const calculateAdvancedScore = (userData) => {
-  const { transactions = [], documents = [], userProfile = {} } = userData;
-  
-  // Initialize scoring components
-  let componentScores = {
-    incomeStability: { score: 0, reasons: [] },
-    spendingPattern: { score: 0, reasons: [] },
-    debtToIncome: { score: 0, reasons: [] },
-    creditHistory: { score: 0, reasons: [] },
-    employment: { score: 0, reasons: [] },
-    savingsPattern: { score: 0, reasons: [] },
-    transactionVolume: { score: 0, reasons: [] }
-  };
-  
-  // Analyze each component
-  componentScores.incomeStability = analyzeIncomeStability(transactions);
-  componentScores.spendingPattern = analyzeSpendingPattern(transactions);
-  componentScores.debtToIncome = analyzeDebt(transactions);
-  componentScores.employment = analyzeEmployment(documents);
-  componentScores.savingsPattern = analyzeSavings(transactions);
-  
-  // Credit history (mock - would be real in production)
-  componentScores.creditHistory = {
-    score: userProfile.creditHistoryScore || 50,
-    reasons: userProfile.creditHistoryScore 
-      ? ['+0 points for existing credit history score'] 
-      : ['+50 base points for credit history (mock)']
-  };
-  
-  // Transaction volume scoring
-  if (transactions.length >= 100) {
-    componentScores.transactionVolume = {
-      score: 10,
-      reasons: ['+10 points for high transaction volume (100+ transactions)']
-    };
-  } else if (transactions.length >= 50) {
-    componentScores.transactionVolume = {
-      score: 7,
-      reasons: ['+7 points for good transaction volume (50-99 transactions)']
-    };
-  } else if (transactions.length >= 20) {
-    componentScores.transactionVolume = {
-      score: 5,
-      reasons: ['+5 points for moderate transaction volume (20-49 transactions)']
-    };
-  } else {
-    componentScores.transactionVolume = {
-      score: 2,
-      reasons: ['+2 points for basic transaction volume (<20 transactions)']
-    };
+// Get user assessments from MySQL
+const getUserAssessments = async (userId) => {
+  try {
+    const assessments = await getAssessmentsByUserId(userId);
+    return assessments;
+  } catch (error) {
+    console.error('Error fetching user assessments:', error);
+    throw error;
   }
-  
-  // Calculate weighted total score
-  let totalScore = 0;
-  let allReasons = [];
-  
-  Object.keys(componentScores).forEach(component => {
-    const weight = SCORING_FACTORS[component] || 0;
-    const componentScore = componentScores[component].score || 0;
-    totalScore += componentScore * weight;
-    allReasons = [...allReasons, ...componentScores[component].reasons];
-  });
-  
-  // Ensure score is within bounds
-  totalScore = Math.max(0, Math.min(100, Math.round(totalScore)));
-  
-  // Determine credit decision
-  let decision, loanAmount, message;
-  
-  if (totalScore >= RISK_THRESHOLDS.excellent) {
-    decision = 'APPROVE';
-    loanAmount = 15000;
-    message = 'Approved for the full loan amount based on excellent financial history.';
-  } else if (totalScore >= RISK_THRESHOLDS.good) {
-    decision = 'APPROVE_WITH_CAP';
-    loanAmount = 10000;
-    message = 'Approved with a capped amount based on good financial history.';
-  } else if (totalScore >= RISK_THRESHOLDS.fair) {
-    decision = 'APPROVE_WITH_CAP';
-    loanAmount = 5000;
-    message = 'Approved with a capped amount based on fair financial history.';
-  } else if (totalScore >= RISK_THRESHOLDS.poor) {
-    decision = 'REVIEW';
-    loanAmount = 2500;
-    message = 'Application requires further review due to limited financial history.';
-  } else {
-    decision = 'REJECT';
-    loanAmount = 0;
-    message = 'Application rejected due to high risk factors in financial history.';
-  }
-  
-  return {
-    score: totalScore,
-    decision,
-    loanAmount,
-    message,
-    reasons: allReasons,
-    componentScores
-  };
-};
-
-// Function to integrate with external credit bureaus (mock implementation)
-const integrateExternalCreditBureaus = async (userData) => {
-  // In a real implementation, this would call external APIs
-  // For now, we'll simulate external data
-  
-  // Simulate external credit score
-  const externalScore = Math.floor(Math.random() * 300) + 550; // Range 550-850
-  
-  // Simulate credit report data
-  const creditReport = {
-    score: externalScore,
-    inquiries: Math.floor(Math.random() * 5),
-    derogatoryMarks: Math.random() > 0.8 ? Math.floor(Math.random() * 3) : 0,
-    creditAgeMonths: Math.floor(Math.random() * 120) + 12, // 1-10 years
-    utilizationRate: Math.random() * 100,
-    accounts: [
-      { type: 'credit_card', status: 'open', balance: Math.floor(Math.random() * 5000) },
-      { type: 'auto_loan', status: 'open', balance: Math.floor(Math.random() * 20000) + 5000 }
-    ]
-  };
-  
-  return creditReport;
-};
-
-// Enhanced scoring function that includes external data
-const calculateScoreWithExternalData = async (userData) => {
-  // Get base score
-  const baseScore = calculateAdvancedScore(userData);
-  
-  // Get external credit data
-  const externalData = await integrateExternalCreditBureaus(userData);
-  
-  // Adjust score based on external data
-  let adjustedScore = baseScore.score;
-  let externalReasons = [];
-  
-  // Adjust based on external credit score
-  if (externalData.score >= 750) {
-    adjustedScore = Math.min(100, adjustedScore + 10);
-    externalReasons.push('+10 points for excellent external credit score');
-  } else if (externalData.score >= 700) {
-    adjustedScore = Math.min(100, adjustedScore + 5);
-    externalReasons.push('+5 points for good external credit score');
-  } else if (externalData.score >= 650) {
-    // No adjustment
-    externalReasons.push('+0 points for fair external credit score');
-  } else if (externalData.score >= 600) {
-    adjustedScore = Math.max(0, adjustedScore - 5);
-    externalReasons.push('-5 points for below average external credit score');
-  } else {
-    adjustedScore = Math.max(0, adjustedScore - 15);
-    externalReasons.push('-15 points for poor external credit score');
-  }
-  
-  // Adjust based on credit inquiries
-  if (externalData.inquiries <= 2) {
-    adjustedScore = Math.min(100, adjustedScore + 3);
-    externalReasons.push('+3 points for minimal credit inquiries');
-  } else if (externalData.inquiries <= 5) {
-    // No adjustment
-    externalReasons.push('+0 points for moderate credit inquiries');
-  } else {
-    adjustedScore = Math.max(0, adjustedScore - 5);
-    externalReasons.push('-5 points for excessive credit inquiries');
-  }
-  
-  // Adjust based on derogatory marks
-  if (externalData.derogatoryMarks === 0) {
-    adjustedScore = Math.min(100, adjustedScore + 8);
-    externalReasons.push('+8 points for clean credit history');
-  } else if (externalData.derogatoryMarks <= 2) {
-    adjustedScore = Math.max(0, adjustedScore - 10);
-    externalReasons.push('-10 points for minor derogatory marks');
-  } else {
-    adjustedScore = Math.max(0, adjustedScore - 25);
-    externalReasons.push('-25 points for significant derogatory marks');
-  }
-  
-  // Ensure final score is within bounds
-  adjustedScore = Math.max(0, Math.min(100, Math.round(adjustedScore)));
-  
-  // Determine final decision
-  let decision, loanAmount, message;
-  
-  if (adjustedScore >= RISK_THRESHOLDS.excellent) {
-    decision = 'APPROVE';
-    loanAmount = 20000;
-    message = 'Approved for the maximum loan amount based on comprehensive financial analysis.';
-  } else if (adjustedScore >= RISK_THRESHOLDS.good) {
-    decision = 'APPROVE_WITH_CAP';
-    loanAmount = 15000;
-    message = 'Approved with a capped amount based on strong financial profile.';
-  } else if (adjustedScore >= RISK_THRESHOLDS.fair) {
-    decision = 'APPROVE_WITH_CAP';
-    loanAmount = 8000;
-    message = 'Approved with a capped amount based on acceptable financial history.';
-  } else if (adjustedScore >= RISK_THRESHOLDS.poor) {
-    decision = 'REVIEW';
-    loanAmount = 4000;
-    message = 'Application requires further review due to mixed financial indicators.';
-  } else {
-    decision = 'REJECT';
-    loanAmount = 0;
-    message = 'Application rejected due to high risk factors in comprehensive analysis.';
-  }
-  
-  return {
-    score: adjustedScore,
-    decision,
-    loanAmount,
-    message,
-    reasons: [...baseScore.reasons, ...externalReasons],
-    componentScores: baseScore.componentScores,
-    externalData
-  };
 };
 
 module.exports = {
-  calculateAdvancedScore,
-  calculateScoreWithExternalData,
-  analyzeDocument,
-  analyzeSpendingPattern,
-  analyzeIncomeStability,
-  analyzeDebt,
-  analyzeEmployment,
-  analyzeSavings
+  calculateCreditScore,
+  getUserAssessments
 };

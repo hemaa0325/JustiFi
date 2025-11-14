@@ -1,0 +1,62 @@
+[
+  {
+    "id": "mhx3c75o26h3c0jkyzi",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "amount": 10000,
+    "assessment_id": "mhx3bsoz51jj69o8gpo",
+    "status": "approved",
+    "created_at": "2025-11-13T07:11:41.628Z",
+    "updated_at": "2025-11-13T07:53:37.003Z",
+    "approved_by": "mhwz8qjj5ke6ri0jrl7",
+    "approved_at": "2025-11-13T07:53:37.003Z"
+  },
+  {
+    "id": "mhx3ekphp3xbj2hqfee",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "amount": 7500,
+    "assessment_id": "mhx3ef8nimbmf3sudj",
+    "status": "pending",
+    "created_at": "2025-11-13T07:13:32.501Z",
+    "updated_at": "2025-11-13T07:13:32.501Z"
+  },
+  {
+    "id": "mhx4ik1q49luogl5z7d",
+    "user_id": "mhx2225s5xheayo1xjn",
+    "amount": 10000,
+    "assessment_id": "mhx4ifl5o5e9qk5i9h",
+    "status": "pending",
+    "created_at": "2025-11-13T07:44:37.886Z",
+    "updated_at": "2025-11-13T07:44:37.886Z"
+  },
+  {
+    "id": "mhybdro49lyj8gsu9fq",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "amount": 5000,
+    "assessment_id": "test-assessment-id",
+    "status": "approved",
+    "created_at": "2025-11-14T03:44:37.972Z",
+    "updated_at": "2025-11-14T03:44:38.373Z",
+    "approved_by": "mhwz8qjj5ke6ri0jrl7",
+    "approved_at": "2025-11-14T03:44:38.373Z"
+  },
+  {
+    "id": "mhyber8slpkgyh0u0a",
+    "user_id": "mhwz8qmx6wyqfeon78",
+    "amount": 5000,
+    "assessment_id": "test-assessment-id",
+    "status": "approved",
+    "created_at": "2025-11-14T03:45:24.076Z",
+    "updated_at": "2025-11-14T03:45:24.477Z",
+    "approved_by": "mhwz8qjj5ke6ri0jrl7",
+    "approved_at": "2025-11-14T03:45:24.477Z"
+  },
+  {
+    "id": "mhyc1b06u5j5i4b8z98",
+    "user_id": "mhybt2okm01wktglbw",
+    "amount": 10000,
+    "assessment_id": "mhyc143mlp9o0fro8w",
+    "status": "pending",
+    "created_at": "2025-11-14T04:02:56.118Z",
+    "updated_at": "2025-11-14T04:02:56.118Z"
+  }
+]

@@ -11,10 +11,25 @@ export const signup = async (userData) => {
       body: JSON.stringify(userData),
     });
     
-    const data = await response.json();
-    
+    // Check if response is ok before parsing JSON
     if (!response.ok) {
-      throw new Error(data.error || 'Signup failed');
+      let errorMessage = 'Signup failed';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (parseError) {
+        // If we can't parse the error response, use the status text
+        errorMessage = response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    // Try to parse JSON response
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      throw new Error('Invalid response from server');
     }
     
     // Save token to localStorage
@@ -23,7 +38,7 @@ export const signup = async (userData) => {
     
     return data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -38,10 +53,25 @@ export const login = async (identifier, password) => {
       body: JSON.stringify({ identifier, password }),
     });
     
-    const data = await response.json();
-    
+    // Check if response is ok before parsing JSON
     if (!response.ok) {
-      throw new Error(data.error || 'Login failed');
+      let errorMessage = 'Login failed';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (parseError) {
+        // If we can't parse the error response, use the status text
+        errorMessage = response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    // Try to parse JSON response
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      throw new Error('Invalid response from server');
     }
     
     // Save token and user to localStorage
@@ -50,7 +80,7 @@ export const login = async (identifier, password) => {
     
     return data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -70,15 +100,30 @@ export const getUserProfile = async (userId) => {
       },
     });
     
-    const data = await response.json();
-    
+    // Check if response is ok before parsing JSON
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch profile');
+      let errorMessage = 'Failed to fetch profile';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (parseError) {
+        // If we can't parse the error response, use the status text
+        errorMessage = response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    // Try to parse JSON response
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      throw new Error('Invalid response from server');
     }
     
     return data.user;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -99,10 +144,25 @@ export const updateUserProfile = async (userId, profileData) => {
       body: JSON.stringify(profileData),
     });
     
-    const data = await response.json();
-    
+    // Check if response is ok before parsing JSON
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to update profile');
+      let errorMessage = 'Failed to update profile';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (parseError) {
+        // If we can't parse the error response, use the status text
+        errorMessage = response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    // Try to parse JSON response
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      throw new Error('Invalid response from server');
     }
     
     // Update user in localStorage
@@ -110,7 +170,7 @@ export const updateUserProfile = async (userId, profileData) => {
     
     return data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 

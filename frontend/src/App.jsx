@@ -19,7 +19,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('onboarding')
   const [assessmentResult, setAssessmentResult] = useState(null)
   const [error, setError] = useState(null)
-  const [userId, setUserId] = useState('user-1') // Default user ID
+  const [userId, setUserId] = useState(null) // Will be set after login
   const [language, setLanguage] = useState('en')
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
@@ -50,6 +50,7 @@ function App() {
     // Get current user info
     const user = getCurrentUser();
     setCurrentUser(user);
+    setUserId(user?.id || null); // Set the actual user ID
     
     // Check if user is a banker or admin
     if (user && user.role === 'banker') {
@@ -161,8 +162,10 @@ function App() {
   if (currentScreen === 'onboarding') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <OnboardingScreen onStart={handleStart} language={language} />
+        <div className="app-container">
+          <NotificationSystem />
+          <OnboardingScreen onStart={handleStart} language={language} />
+        </div>
       </div>
     );
   }
@@ -171,12 +174,15 @@ function App() {
   if (currentScreen === 'upload') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <UploadScreen 
-          onAssessmentComplete={handleAssessmentComplete} 
-          language={language} 
-          onBackToProfile={handleBackToProfile}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <UploadScreen 
+            onAssessmentComplete={handleAssessmentComplete} 
+            language={language} 
+            onBackToProfile={handleBackToProfile}
+            userId={userId} // Pass the actual user ID
+          />
+        </div>
       </div>
     );
   }
@@ -185,16 +191,19 @@ function App() {
   if (currentScreen === 'result') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <ResultScreen 
-          result={assessmentResult} 
-          onRestart={handleRestart} 
-          onViewProfile={handleViewProfile}
-          onViewLoanHistory={handleViewLoanHistory}
-          onViewSpendingPatterns={handleViewSpendingPatterns}
-          onViewSettings={handleViewSettings}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <ResultScreen 
+            result={assessmentResult} 
+            onRestart={handleRestart} 
+            onViewProfile={handleViewProfile}
+            onViewLoanHistory={handleViewLoanHistory}
+            onViewSpendingPatterns={handleViewSpendingPatterns}
+            onViewSettings={handleViewSettings}
+            language={language}
+            userId={userId} // Pass the user ID
+          />
+        </div>
       </div>
     );
   }
@@ -203,17 +212,19 @@ function App() {
   if (currentScreen === 'profile') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <ProfileScreen 
-          onBack={handleLogout}
-          userId={userId}
-          onViewLoanHistory={handleViewLoanHistory}
-          onViewSpendingPatterns={handleViewSpendingPatterns}
-          onViewSettings={handleViewSettings}
-          onUploadDocument={handleUploadDocument}
-          onViewNotifications={handleViewNotifications}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <ProfileScreen 
+            onBack={handleLogout}
+            userId={userId}
+            onViewLoanHistory={handleViewLoanHistory}
+            onViewSpendingPatterns={handleViewSpendingPatterns}
+            onViewSettings={handleViewSettings}
+            onUploadDocument={handleUploadDocument}
+            onViewNotifications={handleViewNotifications}
+            language={language}
+          />
+        </div>
       </div>
     );
   }
@@ -234,11 +245,13 @@ function App() {
   if (currentScreen === 'adminDashboard') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <AdminDashboard 
-          onLogout={handleLogout}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <AdminDashboard 
+            onLogout={handleLogout}
+            language={language}
+          />
+        </div>
       </div>
     );
   }
@@ -247,11 +260,13 @@ function App() {
   if (currentScreen === 'loanHistory') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <LoanHistory 
-          onBack={handleBackToProfile}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <LoanHistory 
+            onBack={handleBackToProfile}
+            language={language}
+          />
+        </div>
       </div>
     );
   }
@@ -260,11 +275,13 @@ function App() {
   if (currentScreen === 'spendingPatterns') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <SpendingPatterns 
-          onBack={handleBackToProfile}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <SpendingPatterns 
+            onBack={handleBackToProfile}
+            language={language}
+          />
+        </div>
       </div>
     );
   }
@@ -273,11 +290,13 @@ function App() {
   if (currentScreen === 'settings') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <SettingsScreen 
-          onBack={handleBackToSettings}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <SettingsScreen 
+            onBack={handleBackToSettings}
+            language={language}
+          />
+        </div>
       </div>
     );
   }
@@ -286,19 +305,23 @@ function App() {
   if (currentScreen === 'notifications') {
     return (
       <div className="app">
-        <NotificationSystem />
-        <NotificationsScreen 
-          onBack={handleBackToProfile}
-          language={language}
-        />
+        <div className="app-container">
+          <NotificationSystem />
+          <NotificationsScreen 
+            onBack={handleBackToProfile}
+            language={language}
+          />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="app">
-      <NotificationSystem />
-      <OnboardingScreen onStart={handleStart} language={language} />
+      <div className="app-container">
+        <NotificationSystem />
+        <OnboardingScreen onStart={handleStart} language={language} />
+      </div>
     </div>
   )
 }
