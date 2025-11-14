@@ -23,3 +23,15 @@ Thumbs.db
 
 # Local development files
 *.local
+
+# Test files
+test_*.js
+*_test.js
+debug*.js
+
+# Unwanted localization files
+*_fixed.js
+
+# Uploaded documents
+uploads/*.pdf
+uploads/*.jpg
